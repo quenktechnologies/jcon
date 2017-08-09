@@ -1,1 +1,0 @@
-{"type":"configuration","properties":[{"type":"property","key":"compilers","value":{"type":"members-import","path":["compilers","all"],"members":["typescript","elm","coffee","purescript"],"location":{"first_line":2,"last_line":2,"first_column":12,"last_column":68}},"location":{"first_line":2,"last_line":2,"first_column":0,"last_column":68}}]}

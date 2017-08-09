@@ -2,16 +2,14 @@
   "name": "jcon",
   "version": "0.0.1",
   "description": "JavaScript Configuration Object Notation",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types":"lib/index.d.ts",
   "scripts": {
     "clean": "rm -R lib/*",
-    "dist": "cd lib && npm publish",
-    "dist:test": "rm -R node_modules/jcon; cp -R lib node_modules/jcon; cp package.json lib/package.json",
-    "build": "npm run -s clean; npm run -s build:parser && npm run -s build:src && npm run -s build:package",
-    "build:parser": "./node_modules/.bin/jison -o src/Parser.js src/jcon.y && cp src/Parser.js lib/Parser.js",
-    "build:src": "tsc -p src",
-    "build:package": "cp --remove-destination package.json lib/package.json",
-    "test": "npm run -s dist:test; ./node_modules/.bin/mocha --opts mocha.opts test"
+    "build:parser": "./node_modules/.bin/jison -o src/Parser.js src/jcon.l && cp src/Parser.js lib/Parser.js",
+    "build:src": "./node_modules/.bin/tsc -p src",
+    "build": "npm run -s build:parser && npm run -s build:src",
+    "test": "./node_modules/.bin/mocha --opts mocha.opts test/parse.ts"
   },
   "author": "Lasana Murray <dev@quenk.com> (http://quenk.com)",
   "license": "Apache-2.0",
@@ -22,12 +20,13 @@
     "mocha": "^3.3.0",
     "must": "^0.13.4",
     "ts-node": "^3.0.4",
-    "typescript": "^2.3.2"
+    "typescript": "^2.4.2"
   },
   "dependencies": {
-    "afpl": "0.0.4",
+    "afpl": "^0.3.0",
     "docopt": "^0.6.2",
     "fluture": "^5.0.0",
+    "property-seek": "^3.1.1",
     "source-map-support": "^0.4.15"
   }
 }

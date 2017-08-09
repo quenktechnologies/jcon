@@ -1,1 +1,0 @@
-{"type":"configuration","properties":[{"type":"property","key":"compiler","value":{"type":"default-import","path":["compilers","/","coffee"],"location":{"first_line":2,"last_line":2,"first_column":11,"last_column":27}},"location":{"first_line":2,"last_line":2,"first_column":0,"last_column":27}}]}

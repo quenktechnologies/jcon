@@ -1,2 +1,0 @@
-
-compilers = from compilers/all [typescript, elm, coffee, purescript]

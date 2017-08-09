@@ -72,93 +72,84 @@
   }
 */
 var Parser = (function(){
-var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,6],$V1=[5,10],$V2=[8,11],$V3=[1,22],$V4=[1,21],$V5=[1,23],$V6=[1,24],$V7=[1,25],$V8=[1,26],$V9=[1,27],$Va=[1,28],$Vb=[5,10,24,25,29],$Vc=[1,30],$Vd=[1,32],$Ve=[2,19],$Vf=[5,10,22,24,25,26,29],$Vg=[24,25],$Vh=[10,29];
+var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,6],$V1=[5,15],$V2=[8,11],$V3=[1,22],$V4=[1,23],$V5=[1,24],$V6=[1,26],$V7=[1,25],$V8=[1,27],$V9=[1,29],$Va=[1,30],$Vb=[1,28],$Vc=[5,15,20,23,25],$Vd=[23,25],$Ve=[15,20];
 var parser = {trace: function trace() { },
 yy: {},
-symbols_: {"error":2,"configuration":3,"configuration_repetition_plus0":4,"EOF":5,"property":6,"key":7,"=":8,"value":9,"IDENTIFIER":10,".":11,"import":12,"members_import":13,"member_import":14,"list":15,"dict":16,"string_literal":17,"boolean_literal":18,"number_literal":19,"uri":20,"FROM":21,"[":22,"member_list":23,"]":24,",":25,"/":26,"members":27,"{":28,"}":29,"dict_repetition_plus0":30,"STRING_LITERAL":31,"TRUE":32,"FALSE":33,"NUMBER_LITERAL":34,"$accept":0,"$end":1},
-terminals_: {2:"error",5:"EOF",8:"=",10:"IDENTIFIER",11:".",21:"FROM",22:"[",24:"]",25:",",26:"/",28:"{",29:"}",31:"STRING_LITERAL",32:"TRUE",33:"FALSE",34:"NUMBER_LITERAL"},
-productions_: [0,[3,2],[3,1],[6,3],[7,1],[7,3],[9,1],[9,1],[9,1],[9,1],[9,1],[9,1],[9,1],[9,1],[12,1],[14,3],[13,5],[23,1],[23,3],[20,1],[20,3],[15,2],[15,3],[27,1],[27,3],[16,2],[16,3],[17,1],[18,1],[18,1],[19,1],[4,1],[4,2],[30,1],[30,2]],
+symbols_: {"error":2,"file":3,"file_repetition_plus0":4,"EOF":5,"directive":6,"identifier":7,"=":8,"value":9,"path":10,".":11,"value_group0":12,"module":13,"MODULE":14,"IDENTIFIER":15,"FROM":16,"env_var":17,"$":18,"{":19,"}":20,"list":21,"[":22,"]":23,"value_list":24,",":25,"dict":26,"dict_repetition_plus0":27,"kvps":28,"kvp":29,"string_literal":30,"STRING_LITERAL":31,"boolean_literal":32,"TRUE":33,"FALSE":34,"number_literal":35,"NUMBER_LITERAL":36,"$accept":0,"$end":1},
+terminals_: {2:"error",5:"EOF",8:"=",11:".",14:"MODULE",15:"IDENTIFIER",16:"FROM",18:"$",19:"{",20:"}",22:"[",23:"]",25:",",31:"STRING_LITERAL",33:"TRUE",34:"FALSE",36:"NUMBER_LITERAL"},
+productions_: [0,[3,2],[6,3],[6,3],[10,3],[10,3],[9,1],[13,1],[13,3],[17,4],[21,2],[21,3],[24,1],[24,3],[26,2],[26,3],[28,1],[28,2],[29,3],[30,1],[32,1],[32,1],[35,1],[7,1],[4,1],[4,2],[12,1],[12,1],[12,1],[12,1],[12,1],[12,1],[12,1],[27,1],[27,2]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
 var $0 = $$.length - 1;
 switch (yystate) {
 case 1:
- this.$ = new Configuration($$[$0-1], this._$); return this.$;
+this.$ = new yy.ast.File($$[$0-1], this._$); return this.$;
 break;
-case 2:
- this.$ = new Configuration([], this._$); return this.$;
+case 2: case 3:
+this.$ = new yy.ast.Directive($$[$0-2], $$[$0], this._$); 
 break;
-case 3:
-this.$ = new Property($$[$0-2], $$[$0], this._$);
+case 4: case 5:
+this.$ = new yy.ast.Path($$[$0-2], $$[$0], this._$); 
 break;
-case 4: case 13:
-this.$ = $$[$0];
+case 7:
+this.$ = new yy.ast.Module('default', $$[$0], this._$);   
 break;
-case 5:
-this.$ = $$[$0-2] + '.' + $$[$0];
+case 8:
+this.$ = new yy.ast.Module($$[$0-2], $$[$0], this._$);      
 break;
-case 14:
-this.$ = new DefaultImport($$[$0], this._$);    
+case 9:
+this.$ = new yy.ast.EnvVar($$[$0-1], this._$);  
 break;
-case 15:
-this.$ = new MemberImport($$[$0-2], $$[$0], this._$); 
+case 10:
+this.$ = new yy.ast.List([], this._$); 
 break;
-case 16:
-this.$ = new MembersImport($$[$0-3], $$[$0-1], this._$);
+case 11:
+this.$ = new yy.ast.List($$[$0-1], this._$); 
 break;
-case 17:
-this.$ = [$$[$0]];                       
+case 12: case 16:
+this.$ = [$$[$0]];         
 break;
-case 18:
-this.$ = $$[$0-2].concat($$[$0]);              
-break;
-case 19:
-this.$ = [$$[$0]];           
-break;
-case 20:
+case 13:
 this.$ = $$[$0-2].concat($$[$0]);
 break;
+case 14:
+this.$ = new yy.ast.Dict([], this._$); 
+break;
+case 15:
+this.$ = new yy.ast.Dict($$[$0-1], this._$); 
+break;
+case 17:
+this.$ = $$[$0-1].concat($$[$0]);
+break;
+case 18:
+this.$ = new yy.ast.KVP($$[$0-2], $$[$0], this._$);
+break;
+case 19:
+this.$ = new yy.ast.StringLiteral($$[$0].slice(1, -1), this._$); 
+break;
+case 20:
+this.$ = new yy.ast.BooleanLiteral(true, this._$);
+break;
 case 21:
-this.$ = new List([], this._$); 
+this.$ = new yy.ast.BooleanLiteral(false, this._$);
 break;
 case 22:
-this.$ = new List($$[$0-1], this._$); 
+this.$ = new yy.ast.NumberLiteral(parseFloat($$[$0]), this._$); 
 break;
 case 23:
-this.$ = [$$[$0]];          
+this.$ = new yy.ast.Identifier($$[$0], this._$);
 break;
-case 24:
-this.$ = $$[$0-2].concat($$[$0]); 
-break;
-case 25:
-this.$ = new Dict([], this._$); 
-break;
-case 26:
-this.$ = new Dict($$[$0-1], this._$); 
-break;
-case 27:
-this.$ = new StringLiteral($$[$0].slice(1, -1), this._$); 
-break;
-case 28:
-this.$ = new BooleanLiteral(true, this._$);
-break;
-case 29:
-this.$ = new BooleanLiteral(false, this._$);
-break;
-case 30:
-this.$ = new NumberLiteral(parseFloat($$[$0]), this._$); 
-break;
-case 31: case 33:
+case 24: case 33:
 this.$ = [$$[$0]];
 break;
-case 32: case 34:
+case 25: case 34:
 $$[$0-1].push($$[$0]);
 break;
 }
 },
-table: [{3:1,4:2,5:[1,3],6:4,7:5,10:$V0},{1:[3]},{5:[1,7],6:8,7:5,10:$V0},{1:[2,2]},o($V1,[2,31]),{8:[1,9],11:[1,10]},o($V2,[2,4]),{1:[2,1]},o($V1,[2,32]),{9:11,10:$V3,12:12,13:13,14:14,15:15,16:16,17:17,18:18,19:19,20:20,21:$V4,22:$V5,28:$V6,31:$V7,32:$V8,33:$V9,34:$Va},{10:[1,29]},o([5,10,29],[2,3]),o($Vb,[2,6]),o($Vb,[2,7]),o($Vb,[2,8]),o($Vb,[2,9]),o($Vb,[2,10]),o($Vb,[2,11]),o($Vb,[2,12]),o($Vb,[2,13]),o($Vb,[2,14],{26:$Vc}),{10:$Vd,20:31},o([5,10,24,25,26,29],$Ve,{21:[1,33]}),{9:36,10:$V3,12:12,13:13,14:14,15:15,16:16,17:17,18:18,19:19,20:20,21:$V4,22:$V5,24:[1,34],27:35,28:$V6,31:$V7,32:$V8,33:$V9,34:$Va},{6:39,7:5,10:$V0,29:[1,37],30:38},o($Vb,[2,27]),o($Vb,[2,28]),o($Vb,[2,29]),o($Vb,[2,30]),o($V2,[2,5]),{10:[1,40]},{22:[1,41],26:$Vc},o($Vf,$Ve),{10:$Vd,20:42},o($Vb,[2,21]),{24:[1,43],25:[1,44]},o($Vg,[2,23]),o($Vb,[2,25]),{6:46,7:5,10:$V0,29:[1,45]},o($Vh,[2,33]),o($Vf,[2,20]),{10:[1,48],23:47},o($Vb,[2,15],{26:$Vc}),o($Vb,[2,22]),{9:49,10:$V3,12:12,13:13,14:14,15:15,16:16,17:17,18:18,19:19,20:20,21:$V4,22:$V5,28:$V6,31:$V7,32:$V8,33:$V9,34:$Va},o($Vb,[2,26]),o($Vh,[2,34]),{24:[1,50],25:[1,51]},o($Vg,[2,17]),o($Vg,[2,24]),o($Vb,[2,16]),{10:[1,52]},o($Vg,[2,18])],
-defaultActions: {3:[2,2],7:[2,1]},
+table: [{3:1,4:2,6:3,7:4,10:5,15:$V0},{1:[3]},{5:[1,7],6:8,7:4,10:5,15:$V0},o($V1,[2,24]),{8:[1,9],11:[1,10]},{8:[1,11],11:[1,12]},o($V2,[2,23]),{1:[2,1]},o($V1,[2,25]),{9:13,12:14,13:15,14:$V3,15:$V4,17:16,18:$V5,19:$V6,21:17,22:$V7,26:18,30:19,31:$V8,32:21,33:$V9,34:$Va,35:20,36:$Vb},{7:31,15:$V0},{9:32,12:14,13:15,14:$V3,15:$V4,17:16,18:$V5,19:$V6,21:17,22:$V7,26:18,30:19,31:$V8,32:21,33:$V9,34:$Va,35:20,36:$Vb},{7:33,15:$V0},o($V1,[2,2]),o($Vc,[2,6]),o($Vc,[2,26]),o($Vc,[2,27]),o($Vc,[2,28]),o($Vc,[2,29]),o($Vc,[2,30]),o($Vc,[2,31]),o($Vc,[2,32]),o($Vc,[2,7]),{16:[1,34]},{19:[1,35]},{9:38,12:14,13:15,14:$V3,15:$V4,17:16,18:$V5,19:$V6,21:17,22:$V7,23:[1,36],24:37,26:18,30:19,31:$V8,32:21,33:$V9,34:$Va,35:20,36:$Vb},{7:42,15:$V0,20:[1,39],27:40,29:41},o($Vc,[2,19]),o($Vc,[2,22]),o($Vc,[2,20]),o($Vc,[2,21]),o($V2,[2,4]),o($V1,[2,3]),o($V2,[2,5]),{14:[1,43]},{15:[1,44]},o($Vc,[2,10]),{23:[1,45],25:[1,46]},o($Vd,[2,12]),o($Vc,[2,14]),{7:42,15:$V0,20:[1,47],29:48},o($Ve,[2,33]),{8:[1,49]},o($Vc,[2,8]),{20:[1,50]},o($Vc,[2,11]),{9:51,12:14,13:15,14:$V3,15:$V4,17:16,18:$V5,19:$V6,21:17,22:$V7,26:18,30:19,31:$V8,32:21,33:$V9,34:$Va,35:20,36:$Vb},o($Vc,[2,15]),o($Ve,[2,34]),{9:52,12:14,13:15,14:$V3,15:$V4,17:16,18:$V5,19:$V6,21:17,22:$V7,26:18,30:19,31:$V8,32:21,33:$V9,34:$Va,35:20,36:$Vb},o($Vc,[2,9]),o($Vd,[2,13]),o($Ve,[2,18])],
+defaultActions: {7:[2,1]},
 parseError: function parseError(str, hash) {
     if (hash.recoverable) {
         this.trace(str);
@@ -309,90 +300,6 @@ parse: function parse(input) {
     }
     return true;
 }};
-
-
-function Configuration(properties, location) {
-
-  this.type = 'configuration';
-  this.properties = properties;
-
-}
-
-function Property(key, value, location) {
-
-  this.type = 'property';
-  this.key = key;
-  this.value = value;
-  this.location = location;
-
-}
-
-function DefaultImport(path, location) {
-
-  this.type = 'default-import';
-  this.path = path;
-  this.location = location;
-
-}
-
-function MemberImport(member, path, location) {
-
-  this.type = 'member-import';
-  this.member = member;
-  this.path = path;
-  this.location = location;
-
-}
-
-function MembersImport(path, members, location) {
-
-  this.type = 'members-import';
-  this.path = path;
-  this.members = members;
-  this.location = location;
-
-}
-
-function List(members, location) {
-
-  this.type = 'list';
-  this.members = members;
-  this.location = location;
-
-}
-
-function Dict(properties, location) {
-
-  this.type = 'dict';
-  this.properties = properties;
-  this.location = location;
-
-}
-
-function StringLiteral(value, location) {
-
-  this.type = 'string';
-  this.value = value;
-  this.location = location;
-
-}
-
-function BooleanLiteral(value, location) {
-
-  this.type = 'boolean';
-  this.value = value;
-  this.location = location;
-
-}
-
-function NumberLiteral(value, location) {
-
-  this.type = 'number';
-  this.value = value;
-  this.location = location;
-
-}
-
 
 /* generated by jison-lex 0.3.4 */
 var lexer = (function(){
@@ -724,17 +631,17 @@ var YYSTATE=YY_START;
 switch($avoiding_name_collisions) {
 case 0:return;
 break;
-case 1:return 32;
+case 1:return;
 break;
 case 2:return 33;
 break;
 case 3:return 34;
 break;
-case 4:return 31;
+case 4:return 'IMPORT';
 break;
-case 5:return 21;
+case 5:return 'AS';
 break;
-case 6:return;
+case 6:return 16;
 break;
 case 7:return '(';
 break;
@@ -742,34 +649,44 @@ case 8:return ')';
 break;
 case 9:return 22;
 break;
-case 10:return 24;
+case 10:return 23;
 break;
-case 11:return ';'
+case 11:return '%';
 break;
-case 12:return ':';
+case 12:return '|';
 break;
-case 13:return 8
+case 13:return ';';
 break;
-case 14:return 25;
+case 14:return ':';
 break;
-case 15:return 11;
+case 15:return 8;
 break;
-case 16:return 28;
+case 16:return 25;
 break;
-case 17:return 29;
+case 17:return 11;
 break;
-case 18:return 26;
+case 18:return 19;
 break;
-case 19:return 10;
+case 19:return 20;
 break;
-case 20:return 5;
+case 20:return '/';
 break;
-case 21:console.log(yy_.yytext);
+case 21:return 36;
+break;
+case 22:return 31;
+break;
+case 23:return 15;
+break;
+case 24:return 14;
+break;
+case 25:return 5;
+break;
+case 26:console.log(yy_.yytext);
 break;
 }
 },
-rules: [/^(?:\s+)/,/^(?:true)/,/^(?:false)/,/^(?:((([-]?([-]?([0]|(([1-9])([0-9]+)*)))\.([0-9]+)*(([eE])([+-]?[0-9]+))?)|(\.([0-9]+)(([eE])([+-]?[0-9]+))?)|(([-]?([0]|(([1-9])([0-9]+)*)))(([eE])([+-]?[0-9]+))?))|([0][xX]([0-9a-fA-F])+)|([0]([0-7])+)))/,/^(?:(("(([^\"\\\n\r]+)|(\\((([\'\"\\bfnrtv])|([^\'\"\\bfnrtv0-9xu]))|((?:[1-7][0-7]{0,2}|[0-7]{2,3}))|([x]([0-9a-fA-F]){2})|([u]([0-9a-fA-F]){4})))|(\\(\r\n|\r|\n)))*")|('(([^\'\\\n\r]+)|(\\((([\'\"\\bfnrtv])|([^\'\"\\bfnrtv0-9xu]))|((?:[1-7][0-7]{0,2}|[0-7]{2,3}))|([x]([0-9a-fA-F]){2})|([u]([0-9a-fA-F]){4})))|(\\(\r\n|\r|\n)))*')|(`(([^\`\\\n\r]+)|(\\((([\'\"\\bfnrtv])|([^\'\"\\bfnrtv0-9xu]))|((?:[1-7][0-7]{0,2}|[0-7]{2,3}))|([x]([0-9a-fA-F]){2})|([u]([0-9a-fA-F]){4})))|(\\(\r\n|\r|\n)))*`)))/,/^(?:from)/,/^(?:#.*)/,/^(?:\()/,/^(?:\))/,/^(?:\[)/,/^(?:\])/,/^(?:;)/,/^(?::)/,/^(?:=)/,/^(?:,)/,/^(?:\.)/,/^(?:\{)/,/^(?:\})/,/^(?:\/)/,/^(?:([a-zA-Z$_][a-zA-Z$_0-9-]*))/,/^(?:$)/,/^(?:.)/],
-conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21],"inclusive":true}}
+rules: [/^(?:\s+)/,/^(?:#.*)/,/^(?:true)/,/^(?:false)/,/^(?:import)/,/^(?:as)/,/^(?:from)/,/^(?:\()/,/^(?:\))/,/^(?:\[)/,/^(?:\])/,/^(?:%)/,/^(?:\|)/,/^(?:;)/,/^(?::)/,/^(?:=)/,/^(?:,)/,/^(?:\.)/,/^(?:\{)/,/^(?:\})/,/^(?:\/)/,/^(?:((([-]?([-]?([0]|(([1-9])([0-9]+)*)))\.([0-9]+)*(([eE])([+-]?[0-9]+))?)|(\.([0-9]+)(([eE])([+-]?[0-9]+))?)|(([-]?([0]|(([1-9])([0-9]+)*)))(([eE])([+-]?[0-9]+))?))|([0][xX]([0-9a-fA-F])+)|([0]([0-7])+)))/,/^(?:(("(([^\"\\\n\r]+)|(\\((([\'\"\\bfnrtv])|([^\'\"\\bfnrtv0-9xu]))|((?:[1-7][0-7]{0,2}|[0-7]{2,3}))|([x]([0-9a-fA-F]){2})|([u]([0-9a-fA-F]){4})))|(\\(\r\n|\r|\n)))*")|('(([^\'\\\n\r]+)|(\\((([\'\"\\bfnrtv])|([^\'\"\\bfnrtv0-9xu]))|((?:[1-7][0-7]{0,2}|[0-7]{2,3}))|([x]([0-9a-fA-F]){2})|([u]([0-9a-fA-F]){4})))|(\\(\r\n|\r|\n)))*')|(`(([^\`\\\n\r]+)|(\\((([\'\"\\bfnrtv])|([^\'\"\\bfnrtv0-9xu]))|((?:[1-7][0-7]{0,2}|[0-7]{2,3}))|([x]([0-9a-fA-F]){2})|([u]([0-9a-fA-F]){4})))|(\\(\r\n|\r|\n)))*`)))/,/^(?:([a-zA-Z$_][a-zA-Z$_0-9-]*))/,/^(?:([@a-zA-Z$_][a-zA-Z$_0-9-\/]*))/,/^(?:$)/,/^(?:.)/],
+conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26],"inclusive":true}}
 });
 return lexer;
 })();

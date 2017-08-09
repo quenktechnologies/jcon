@@ -1,44 +1,125 @@
-#!/usr/bin/env node
-
-import 'source-map-support/register';
-import * as docopt from 'docopt';
-import * as fs from 'fs';
+/// <reference path='Parser.d.ts' />
 import * as os from 'os';
-import Future from 'fluture';
-import { compile } from './Compiler';
-import {parse} from './Parser';
+import * as nodes from './Node';
+import { Either } from 'afpl';
+import Parser = require('./Parser');
+import property from 'property-seek';
 
-//typescript complains if we try to import this
-//the output of jison does not play nicely with our current tsconfig settings.
-const parse = require('./Parser').parse;
+export { Node as Node } from './Node';
 
-const getFileContents = path =>
-    Future.node(done => fs.readFile(path, { encoding: 'utf8' }, done));
+export interface AST {
 
-const writeToStream = stream => contents =>
-    Future.node(done => stream.write(`${contents}${os.EOL}`, 'utf8', done));
+    [key: string]: nodes.Node
 
-const args: string = docopt.docopt(`
+}
 
-JCON.
+export interface Context {
 
-Usage: jcon [options] <file>
+    symbols: SymbolTable;
+    output: string[];
 
-Options:
-  -h --help     Show this screen.
-  --version     Show jcon version.
-  --ast         Output only the Abstract Syntax Tree (AST) in JSON.
-`, { version: require('../package.json').version });
+}
 
-getFileContents(args['<file>'])
-    .map(parse)
-  /*  .map(compile(args))
-    .chain(state =>
-        state
-        .evalState({})
-        .cata(e => Future.reject(e), o => Future.of(o))) */
-/*    .map(pretty) */
-    .chain(writeToStream(process.stdout))
-    .chainRej(writeToStream(process.stderr))
-    .fork(console.error, x => x);
+export interface SymbolTable {
 
+    [key: string]: Variable
+
+}
+
+export class Variable {
+
+    constructor(public id: string) { }
+
+}
+
+export const parse = (str: string, ast: AST = <any>nodes): nodes.File => {
+
+    Parser.parser.yy = { ast };
+    return Parser.parser.parse(str);
+
+}
+
+export const code = (n: nodes.Node): string => {
+
+    if (n instanceof nodes.File) {
+
+        let o: { [key: string]: string } = n.directives.reduce((p, d) =>
+            property(code(d.path), code(d.value), p), {});
+
+        let print = (o: any): string => (typeof o === 'object') ? `{${
+            Object
+                .keys(o)
+                .map(k => `  ${k}: ${typeof (o[k]) === 'object' ? print(o[k]) : o[k]}`)
+                .join(',' + os.EOL)}}` : o;
+
+        return `export default ${print(o)}`;
+
+    } else if (n instanceof nodes.Path) {
+
+        return `${code(n.target)}.${code(n.id)}`;
+
+    } else if (n instanceof nodes.Module) {
+
+        return `require('${n.module}').${n.member}`;
+
+    } else if (n instanceof nodes.EnvVar) {
+
+        return `process.env['${n.key}']`;
+
+    } else if (n instanceof nodes.List) {
+
+        let members = n.members.map(code).join(',');
+
+        return `[${members}]`;
+
+    } else if (n instanceof nodes.Dict) {
+
+        let properties = n.properties.map(code).join(',');
+
+        return `{ ${properties} } `;
+
+    } else if (n instanceof nodes.KVP) {
+
+        let key = code(n.key);
+        let value = code(n.value);
+
+        return `${key} : ${value} `;
+
+    } else if (n instanceof nodes.StringLiteral) {
+
+        return `'${n.value}'`;
+
+    } else if (n instanceof nodes.BooleanLiteral) {
+
+        return n.value;
+
+    } else if (n instanceof nodes.NumberLiteral) {
+
+        return n.value;
+
+    } else if (n instanceof nodes.Identifier) {
+
+        return n.value;
+
+    } else {
+
+        throw new TypeError(`Unexpected type ${typeof n
+            }, '${n}'!`);
+
+    }
+
+}
+
+export const compile = <A, B>(src: string): Either<A, B> => {
+
+    try {
+
+        return <any>Either.right(`${code(parse(src))} `);
+
+    } catch (e) {
+
+        return <any>Either.left(e);
+
+    }
+
+}
