@@ -1,7 +1,6 @@
 /// <reference path='Parser.d.ts' />
 import * as os from 'os';
 import * as nodes from './Node';
-import { Either } from 'afpl';
 import Parser = require('./Parser');
 import property from 'property-seek';
 
@@ -110,16 +109,4 @@ export const code = (n: nodes.Node): string => {
 
 }
 
-export const compile = <A, B>(src: string): Either<A, B> => {
-
-    try {
-
-        return <any>Either.right(`${code(parse(src))} `);
-
-    } catch (e) {
-
-        return <any>Either.left(e);
-
-    }
-
-}
+export const compile = (src: string): string => `${code(parse(src))} `;

@@ -21,7 +21,7 @@ function makeTest(test, index) {
 
     if (process.env.GENERATE) {
         fs.writeFileSync(`./test/expectations/${file}.json`, json(parse(test.input)));
-        fs.writeFileSync(`./test/expectations/${file}.ts`, compile(test.input).cata(e => { throw e; }, x => x));
+        fs.writeFileSync(`./test/expectations/${file}.ts`, compile(test.input));
         return;
     }
 
@@ -31,7 +31,7 @@ function makeTest(test, index) {
             encoding: 'utf8'
         }));
 
-        compare(compile(test.input).cata(e => { throw e; }, x => x), fs.readFileSync(`./test/expectations/${file}.ts`, {
+        compare(compile(test.input), fs.readFileSync(`./test/expectations/${file}.ts`, {
             encoding: 'utf8'
         }));
 
