@@ -23,7 +23,6 @@
     "typescript": "^2.4.2"
   },
   "dependencies": {
-    "afpl": "^0.3.0",
     "docopt": "^0.6.2",
     "fluture": "^5.0.0",
     "property-seek": "^3.1.1",
