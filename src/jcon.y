@@ -38,6 +38,7 @@ Module (((\.{1,2}\/){1,2})|([/]))?([\w:@/-]+)
 %x MEMBER_SRC
 %x OBJECT
 %x ARRAY
+%x ENVVAR
 %%
 
 /* Lexer rules */
@@ -52,6 +53,7 @@ Module (((\.{1,2}\/){1,2})|([/]))?([\w:@/-]+)
 <VALUE>'false'             this.popState();              return 'FALSE';
 <VALUE>'('                 this.popState(); this.begin('MEMBER'); return '(';
 <VALUE>{Module}            this.popState();              return 'MODULE';
+<VALUE>'$'                 this.popState(); this.begin('ENVVAR'); return '$';
 <VALUE>'{'                 this.popState(); this.begin('OBJECT'); return '{';
 <VALUE>'['                 this.popState(); this.begin('ARRAY');  return '[';
 
@@ -60,6 +62,10 @@ Module (((\.{1,2}\/){1,2})|([/]))?([\w:@/-]+)
 <MEMBER>')'                this.popState();              return ')';
 
 <MEMBER_SRC>{Module}       this.popState();              return 'MODULE';
+
+<ENVVAR>'{'                                              return '{'
+<ENVVAR>{Identifier}                                     return 'IDENTIFIER';
+<ENVVAR>'}'                this.popState();              return '}'
 
 <OBJECT>{Identifier}                                     return 'IDENTIFIER';
 <OBJECT>'='                this.begin('VALUE');          return '=';

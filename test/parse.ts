@@ -59,7 +59,7 @@ tendrill.app.connections = {
 
  	 collection = "websessions"
 	 autoRemove = "interval"
-	 autoRemoveInterval = 60
+	 autoRemoveInterval = \${AUTO_REMOVE_INTERVAL}
 
        }
 
