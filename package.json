@@ -6,7 +6,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "clean": "rm -R lib/*",
-    "build:parser": "./node_modules/.bin/jison -o src/Parser.js src/jcon.l && cp src/Parser.js lib/Parser.js",
+    "build:parser": "./node_modules/.bin/jison -o src/Parser.js src/jcon.y && cp src/Parser.js lib/Parser.js",
     "build:src": "./node_modules/.bin/tsc -p src",
     "build": "npm run -s build:parser && npm run -s build:src",
     "test": "./node_modules/.bin/mocha --opts mocha.opts test/parse.ts"

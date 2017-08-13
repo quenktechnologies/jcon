@@ -42,6 +42,9 @@ export const code = (n: nodes.Node): string => {
 
     if (n instanceof nodes.File) {
 
+        if (n.directives.length === 0)
+            return '{}';
+
         let o: { [key: string]: string } = n.directives.reduce((p, d) =>
             property(code(d.path), code(d.value), p), {});
 
@@ -51,7 +54,7 @@ export const code = (n: nodes.Node): string => {
                 .map(k => `  ${k}: ${typeof (o[k]) === 'object' ? print(o[k]) : o[k]}`)
                 .join(',' + os.EOL)}}` : o;
 
-        return `export default ${print(o)}`;
+        return print(o);
 
     } else if (n instanceof nodes.Path) {
 

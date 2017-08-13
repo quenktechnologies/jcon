@@ -47,13 +47,14 @@ tests = {
 
 test = true
 object = { test = 'yes' number = 2 }
+array = [1, 2, 3]
 tendrill.app.views.engine = tenhub-server/views/Engine
 
 tendrill.app.connections = {
    
     main = {
         
-       connector = connector from tenhub-server/connectors/mongodb
+       connector = (connector from tenhub-server/connectors/mongodb)
        options = {
 
  	 collection = "websessions"

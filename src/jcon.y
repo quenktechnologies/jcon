@@ -15,7 +15,6 @@ HexIntegerLiteral [0][xX]{HexDigit}+
 DecimalLiteral ([-]?{DecimalIntegerLiteral}\.{DecimalDigits}*{ExponentPart}?)|(\.{DecimalDigits}{ExponentPart}?)|({DecimalIntegerLiteral}{ExponentPart}?)
 NumberLiteral {DecimalLiteral}|{HexIntegerLiteral}|{OctalIntegerLiteral}
 Identifier [a-zA-Z$_][a-zA-Z$_0-9-]*
-Module [@a-zA-Z$_][a-zA-Z$_0-9-/]*
 DotIdentifier [a-zA-Z$_][a-zA-Z$_0-9.-]*
 LineContinuation \\(\r\n|\r|\n)
 OctalEscapeSequence (?:[1-7][0-7]{0,2}|[0-7]{2,3})
@@ -30,38 +29,62 @@ SingleStringCharacter ([^\'\\\n\r]+)|(\\{EscapeSequence})|{LineContinuation}
 TemplateStringCharacter ([^\`\\\n\r]+)|(\\{EscapeSequence})|{LineContinuation}
 StringLiteral (\"{DoubleStringCharacter}*\")|(\'{SingleStringCharacter}*\')|(\`{TemplateStringCharacter}*\`)
 Text ({DoubleStringCharacter}*)|({SingleStringCharacter}*)
+Module (((\.{1,2}\/){1,2})|([/]))?([\w:@/-]+)
 
 /* Lexer flags */
 %options flex
+%x VALUE
+%x MEMBER
+%x MEMBER_SRC
+%x OBJECT
+%x ARRAY
 %%
 
 /* Lexer rules */
 
-\s+                                                      return;
-'#'.*                                                    return;
-'true'                                                   return 'TRUE';
-'false'                                                  return 'FALSE';
-'import'                                                 return 'IMPORT';
-'as'                                                     return 'AS';
-'from'                                                   return 'FROM';
-'('                                                      return '(';
-')'                                                      return ')';
-'['                                                      return '[';
-']'                                                      return ']';
-'%'                                                      return '%';
-'|'                                                      return '|';
-';'                                                      return ';';
-':'                                                      return ':';
-'='                                                      return '=';
-','                                                      return ',';
-'.'                                                      return '.';
-'{'                                                      return '{';
-'}'                                                      return '}';
-'/'                                                      return '/';
-{NumberLiteral}                                          return 'NUMBER_LITERAL';
-{StringLiteral}                                          return 'STRING_LITERAL';
-{Identifier}                                             return 'IDENTIFIER';
-{Module}                                                 return 'MODULE';
+<INITIAL>'#'.*                                           return;
+<INITIAL>{Identifier}                                    return 'IDENTIFIER';
+<INITIAL>'='               this.begin('VALUE');          return '=';
+
+<VALUE>{NumberLiteral}     this.popState();              return 'NUMBER_LITERAL';
+<VALUE>{StringLiteral}     this.popState();              return 'STRING_LITERAL';
+<VALUE>'true'              this.popState();              return 'TRUE';
+<VALUE>'false'             this.popState();              return 'FALSE';
+<VALUE>'('                 this.popState(); this.begin('MEMBER'); return '(';
+<VALUE>{Module}            this.popState();              return 'MODULE';
+<VALUE>'{'                 this.popState(); this.begin('OBJECT'); return '{';
+<VALUE>'['                 this.popState(); this.begin('ARRAY');  return '[';
+
+<MEMBER>'from'             this.begin('MEMBER_SRC');     return 'FROM';
+<MEMBER>{Identifier}                                     return 'IDENTIFIER';
+<MEMBER>')'                this.popState();              return ')';
+
+<MEMBER_SRC>{Module}       this.popState();              return 'MODULE';
+
+<OBJECT>{Identifier}                                     return 'IDENTIFIER';
+<OBJECT>'='                this.begin('VALUE');          return '=';
+<OBJECT>'['                this.begin('ARRAY');          return '[';
+<OBJECT>'}'                this.popState();              return '}';
+
+<ARRAY>'['                 this.begin('ARRAY');          return '[';
+<ARRAY>{NumberLiteral}                                   return 'NUMBER_LITERAL';
+<ARRAY>{StringLiteral}                                   return 'STRING_LITERAL';
+<ARRAY>'true'                                            return 'TRUE';
+<ARRAY>'false'                                           return 'FALSE';
+<ARRAY>{Module}                                          return 'MODULE';
+<ARRAY>'{'                 this.begin('OBJECT');         return '{';
+<ARRAY>']'                 this.popState();              return ']';
+
+<*>\s+                                                   return;
+<*>'['                                                   return '[';
+<*>']'                                                   return ']';
+<*>'%'                                                   return '%';
+<*>'|'                                                   return '|';
+<*>';'                                                   return ';';
+<*>':'                                                   return ':';
+<*>','                                                   return ',';
+<*>'.'                                                   return '.';
+<*>'/'                                                   return '/';
 
 <*><<EOF>>                                               return 'EOF';
 
@@ -72,7 +95,7 @@ Text ({DoubleStringCharacter}*)|({SingleStringCharacter}*)
 %%
 
 file
-          : directive+ EOF
+          : directive* EOF
             {$$ = new yy.ast.File($1, @$); return $$;}
           ;
 
@@ -100,8 +123,8 @@ module
           : MODULE 
             {$$ = new yy.ast.Module('default', $1, @$);   }
 
-          | IDENTIFIER FROM MODULE
-            {$$ = new yy.ast.Module($1, $3, @$);      }
+          | '(' IDENTIFIER FROM MODULE ')'
+            {$$ = new yy.ast.Module($2, $4, @$);      }
           ;
 
 env_var
