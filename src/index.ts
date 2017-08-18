@@ -89,7 +89,7 @@ export const code = (n: nodes.Node): string => {
 
     } else if (n instanceof nodes.StringLiteral) {
 
-        return `'${n.value}'`;
+        return `\`${n.value}\``;
 
     } else if (n instanceof nodes.BooleanLiteral) {
 

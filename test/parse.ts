@@ -48,6 +48,7 @@ tests = {
 test = true
 object = { test = 'yes' number = 2 }
 array = [1, 2, 3]
+path = "\${__dirname}/here"
 tendrill.app.views.engine = tenhub-server/views/Engine
 
 tendrill.app.connections = {
