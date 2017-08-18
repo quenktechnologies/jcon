@@ -50,7 +50,7 @@ export class Module {
 
     type = 'module';
 
-    constructor(public member: Identifier, public module: string, public location: Location) { }
+    constructor(public member: Identifier, public module: string, public args: Value[], public location: Location) { }
 
 }
 

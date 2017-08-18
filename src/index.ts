@@ -62,7 +62,11 @@ export const code = (n: nodes.Node): string => {
 
     } else if (n instanceof nodes.Module) {
 
-        return `require('${n.module}').${n.member}`;
+        let args = n.args.map(a => code(a)).join(',');
+
+        return `((function(m) { ` +
+            ` return ${n.member ? 'm.' + n.member : 'm.default?m.default:m'} })` +
+            `(require('${n.module}')${args ? '(' + args + ')' : ''}))`
 
     } else if (n instanceof nodes.EnvVar) {
 
@@ -105,8 +109,7 @@ export const code = (n: nodes.Node): string => {
 
     } else {
 
-        throw new TypeError(`Unexpected type ${typeof n
-            }, '${n}'!`);
+        throw new TypeError(`Unexpected type ${typeof n}, '${n}'!`);
 
     }
 

@@ -1,3 +1,4 @@
+
 %lex
 
 /* Definitions */
@@ -29,16 +30,19 @@ SingleStringCharacter ([^\'\\\n\r]+)|(\\{EscapeSequence})|{LineContinuation}
 TemplateStringCharacter ([^\`\\\n\r]+)|(\\{EscapeSequence})|{LineContinuation}
 StringLiteral (\"{DoubleStringCharacter}*\")|(\'{SingleStringCharacter}*\')|(\`{TemplateStringCharacter}*\`)
 Text ({DoubleStringCharacter}*)|({SingleStringCharacter}*)
-Module (((\.{1,2}\/){1,2})|([/]))?([\w:@/-]+)
+Path (([\w@:.-]+)?(\/[\w@:.-]+)+\/?)|(\/)|(\.{1,2}\/?)
+Module [a-zA-Z@][a-zA-Z$_0-9-]*
 
 /* Lexer flags */
 %options flex
 %x VALUE
-%x MEMBER
-%x MEMBER_SRC
+%x MODULE
+%x MODULE_ARGS
 %x OBJECT
 %x ARRAY
 %x ENVVAR
+%{ var EOL = require('os').EOL; 
+%}
 %%
 
 /* Lexer rules */
@@ -51,17 +55,24 @@ Module (((\.{1,2}\/){1,2})|([/]))?([\w:@/-]+)
 <VALUE>{StringLiteral}     this.popState();              return 'STRING_LITERAL';
 <VALUE>'true'              this.popState();              return 'TRUE';
 <VALUE>'false'             this.popState();              return 'FALSE';
-<VALUE>'('                 this.popState(); this.begin('MEMBER'); return '(';
-<VALUE>{Module}            this.popState();              return 'MODULE';
+<VALUE>{Path}              this.popState(); this.begin('MODULE');  return 'PATH';
+<VALUE>{Module}            this.popState(); this.begin('MODULE');  return 'MODULE';
 <VALUE>'$'                 this.popState(); this.begin('ENVVAR'); return '$';
 <VALUE>'{'                 this.popState(); this.begin('OBJECT'); return '{';
 <VALUE>'['                 this.popState(); this.begin('ARRAY');  return '[';
 
-<MEMBER>'from'             this.begin('MEMBER_SRC');     return 'FROM';
-<MEMBER>{Identifier}                                     return 'IDENTIFIER';
-<MEMBER>')'                this.popState();              return ')';
+<MODULE>'('                this.popState(); this.begin('MODULE_ARGS'); return '(';
+<MODULE>\s+                this.popState();                    return;
 
-<MEMBER_SRC>{Module}       this.popState();              return 'MODULE';
+<MODULE_ARGS>'['           this.begin('ARRAY');                return '[';
+<MODULE_ARGS>{NumberLiteral}                                   return 'NUMBER_LITERAL';
+<MODULE_ARGS>{StringLiteral}                                   return 'STRING_LITERAL';
+<MODULE_ARGS>'true'                                            return 'TRUE';
+<MODULE_ARGS>'false'                                           return 'FALSE';
+<MODULE_ARGS>{Module}                                          return 'MODULE';
+<MODULE_ARGS>'{'            this.begin('OBJECT');              return '{';
+<MODULE_ARGS>','                                               return ',';
+<MODULE_ARGS>')'            this.popState();                   return ')';
 
 <ENVVAR>'{'                                              return '{'
 <ENVVAR>{Identifier}                                     return 'IDENTIFIER';
@@ -79,16 +90,14 @@ Module (((\.{1,2}\/){1,2})|([/]))?([\w:@/-]+)
 <ARRAY>'false'                                           return 'FALSE';
 <ARRAY>{Module}                                          return 'MODULE';
 <ARRAY>'{'                 this.begin('OBJECT');         return '{';
+<ARRAY>','                                               return ',';
 <ARRAY>']'                 this.popState();              return ']';
 
 <*>\s+                                                   return;
-<*>'['                                                   return '[';
-<*>']'                                                   return ']';
 <*>'%'                                                   return '%';
 <*>'|'                                                   return '|';
 <*>';'                                                   return ';';
 <*>':'                                                   return ':';
-<*>','                                                   return ',';
 <*>'.'                                                   return '.';
 <*>'/'                                                   return '/';
 
@@ -126,11 +135,18 @@ value
           ;
 
 module
-          : MODULE 
-            {$$ = new yy.ast.Module('default', $1, @$);   }
+          : PATH
+            {$$ = new yy.ast.Module('', $1, [],@$);   }
 
-          | '(' IDENTIFIER FROM MODULE ')'
-            {$$ = new yy.ast.Module($2, $4, @$);      }
+          | MODULE
+            {$$ = new yy.ast.Module('', $1, [],@$);   }
+
+          | PATH '(' value_list ')'
+            {$$ = new yy.ast.Module('', $1, $3, @$);}
+
+          | MODULE '(' value_list ')'
+            {$$ = new yy.ast.Module('', $1, $3, @$);}
+
           ;
 
 env_var

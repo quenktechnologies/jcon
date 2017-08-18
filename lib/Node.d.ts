@@ -29,9 +29,10 @@ export declare type Value = Module | EnvVar | List | Dict | StringLiteral | Numb
 export declare class Module {
     member: Identifier;
     module: string;
+    args: Value[];
     location: Location;
     type: string;
-    constructor(member: Identifier, module: string, location: Location);
+    constructor(member: Identifier, module: string, args: Value[], location: Location);
 }
 export declare class EnvVar {
     key: string;

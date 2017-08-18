@@ -49,13 +49,16 @@ test = true
 object = { test = 'yes' number = 2 }
 array = [1, 2, 3]
 path = "\${__dirname}/here"
+list = [1,'two', [3], {value=4}]
 tendrill.app.views.engine = tenhub-server/views/Engine
+module = tenhub
+funcs = path/to/somewhere(1, 'two', [3], {value = 4})
 
 tendrill.app.connections = {
    
     main = {
         
-       connector = (connector from tenhub-server/connectors/mongodb)
+       connector = tenhub-server/connectors/mongodb
        options = {
 
  	 collection = "websessions"
