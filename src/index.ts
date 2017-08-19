@@ -60,17 +60,22 @@ export const code = (n: nodes.Node): string => {
 
         return `${code(n.target)}.${code(n.id)}`;
 
-    } else if (n instanceof nodes.Module) {
-
-        let args = n.args.map(a => code(a)).join(',');
+    } else if (n instanceof nodes.Require) {
 
         return `((function(m) { ` +
-            ` return ${n.member ? 'm.' + n.member : 'm.default?m.default:m'} })` +
-            `(require('${n.module}')${args ? '(' + args + ')' : ''}))`
+            ` return ${n.member ? 'm.' + code(n.member) : 'm.default?m.default:m'} })` +
+            `(require(${code(n.module)})))`
 
     } else if (n instanceof nodes.EnvVar) {
 
         return `process.env['${n.key}']`;
+
+    } else if (n instanceof nodes.Call) {
+
+        let m = code(n.module);
+        let args = n.args.map(a => code(a)).join(',');
+
+        return `${m}(${args})`;
 
     } else if (n instanceof nodes.List) {
 
@@ -102,6 +107,10 @@ export const code = (n: nodes.Node): string => {
     } else if (n instanceof nodes.NumberLiteral) {
 
         return n.value;
+
+    } else if (n instanceof nodes.Module) {
+
+        return `'${n.module}'`;
 
     } else if (n instanceof nodes.Identifier) {
 

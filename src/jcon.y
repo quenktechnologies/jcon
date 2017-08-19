@@ -37,10 +37,10 @@ Module [a-zA-Z@][a-zA-Z$_0-9-]*
 %options flex
 %x VALUE
 %x MODULE
-%x MODULE_ARGS
-%x OBJECT
-%x ARRAY
 %x ENVVAR
+%x CALL
+%x ARRAY
+%x OBJECT
 %{ var EOL = require('os').EOL; 
 %}
 %%
@@ -57,45 +57,52 @@ Module [a-zA-Z@][a-zA-Z$_0-9-]*
 <VALUE>'false'             this.popState();              return 'FALSE';
 <VALUE>{Path}              this.popState(); this.begin('MODULE');  return 'PATH';
 <VALUE>{Module}            this.popState(); this.begin('MODULE');  return 'MODULE';
-<VALUE>'$'                 this.popState(); this.begin('ENVVAR'); return '$';
+<VALUE>'${'                this.popState(); this.begin('ENVVAR'); return '${';
+<VALUE>'$('                this.popState(); this.begin('CALL'); return '$(';
 <VALUE>'{'                 this.popState(); this.begin('OBJECT'); return '{';
 <VALUE>'['                 this.popState(); this.begin('ARRAY');  return '[';
 
-<MODULE>'('                this.popState(); this.begin('MODULE_ARGS'); return '(';
-<MODULE>\s+                this.popState();                    return;
+<MODULE>'|'                                              return '|';
+<MODULE>{Identifier}       this.popState();              return 'IDENTIFIER';
+<MODULE>','                this.popState();              return ',';
+<MODULE>\s+                this.popState();              return;
 
-<MODULE_ARGS>'['           this.begin('ARRAY');                return '[';
-<MODULE_ARGS>{NumberLiteral}                                   return 'NUMBER_LITERAL';
-<MODULE_ARGS>{StringLiteral}                                   return 'STRING_LITERAL';
-<MODULE_ARGS>'true'                                            return 'TRUE';
-<MODULE_ARGS>'false'                                           return 'FALSE';
-<MODULE_ARGS>{Module}                                          return 'MODULE';
-<MODULE_ARGS>'{'            this.begin('OBJECT');              return '{';
-<MODULE_ARGS>','                                               return ',';
-<MODULE_ARGS>')'            this.popState();                   return ')';
-
-<ENVVAR>'{'                                              return '{'
 <ENVVAR>{Identifier}                                     return 'IDENTIFIER';
 <ENVVAR>'}'                this.popState();              return '}'
 
-<OBJECT>{Identifier}                                     return 'IDENTIFIER';
-<OBJECT>'='                this.begin('VALUE');          return '=';
-<OBJECT>'['                this.begin('ARRAY');          return '[';
-<OBJECT>'}'                this.popState();              return '}';
+<CALL>{NumberLiteral}                                    return 'NUMBER_LITERAL';
+<CALL>{StringLiteral}                                    return 'STRING_LITERAL';
+<CALL>'true'                                             return 'TRUE';
+<CALL>','                                                return ',';
+<CALL>'false'                                            return 'FALSE';
+<CALL>{Path}                this.begin('MODULE');        return 'PATH';
+<CALL>{Module}              this.begin('MODULE');        return 'MODULE';
+<CALL>'${'                  this.begin('ENVVAR');        return '${';
+<CALL>'$('                  this.begin('CALL');          return '$(';
+<CALL>'{'                   this.begin('OBJECT');        return '{';
+<CALL>'['                   this.begin('ARRAY');         return '[';
+<CALL>')'                   this.popState();             return ')';
 
 <ARRAY>'['                 this.begin('ARRAY');          return '[';
 <ARRAY>{NumberLiteral}                                   return 'NUMBER_LITERAL';
 <ARRAY>{StringLiteral}                                   return 'STRING_LITERAL';
 <ARRAY>'true'                                            return 'TRUE';
 <ARRAY>'false'                                           return 'FALSE';
-<ARRAY>{Module}                                          return 'MODULE';
+<ARRAY>{Path}              this.begin('MODULE');         return 'PATH';
+<ARRAY>{Module}            this.begin('MODULE');         return 'MODULE';
+<ARRAY>'${'                this.begin('ENVVAR');         return '${';
+<ARRAY>'$('                this.begin('CALL');           return '$(';
 <ARRAY>'{'                 this.begin('OBJECT');         return '{';
 <ARRAY>','                                               return ',';
 <ARRAY>']'                 this.popState();              return ']';
 
+<OBJECT>{Identifier}                                     return 'IDENTIFIER';
+<OBJECT>'='                this.begin('VALUE');          return '=';
+<OBJECT>'['                this.begin('ARRAY');          return '[';
+<OBJECT>'}'                this.popState();              return '}';
+
 <*>\s+                                                   return;
 <*>'%'                                                   return '%';
-<*>'|'                                                   return '|';
 <*>';'                                                   return ';';
 <*>':'                                                   return ':';
 <*>'.'                                                   return '.';
@@ -131,27 +138,25 @@ path
           ;
 
 value
-          : (module|env_var|list|dict|string_literal|number_literal|boolean_literal)
+          : (require|call|env_var|list|dict|string_literal|number_literal|boolean_literal)
           ;
 
-module
-          : PATH
-            {$$ = new yy.ast.Module('', $1, [],@$);   }
+require
+          : npm_module
+            {$$ = new yy.ast.Require($1, null, @$);   }
 
-          | MODULE
-            {$$ = new yy.ast.Module('', $1, [],@$);   }
-
-          | PATH '(' value_list ')'
-            {$$ = new yy.ast.Module('', $1, $3, @$);}
-
-          | MODULE '(' value_list ')'
-            {$$ = new yy.ast.Module('', $1, $3, @$);}
-
+          | npm_module '|' identifier
+            {$$ = new yy.ast.Require($1, $3, @$);}
           ;
 
 env_var
-          : '$' '{' IDENTIFIER '}'
+          : '${' identifier '}'
             {$$ = new yy.ast.EnvVar($3, @$);  }
+          ;
+
+call
+          : '$(' require value_list ')'
+            {$$ = new yy.ast.Call($2, $3, @$);    }
           ;
 
 list      
@@ -201,6 +206,14 @@ boolean_literal
 number_literal
           : NUMBER_LITERAL
             {$$ = new yy.ast.NumberLiteral(parseFloat($1), @$); }
+          ;
+
+npm_module
+          : PATH
+            {$$ = new yy.ast.Module($1, @$);}
+
+          | MODULE
+            {$$ = new yy.ast.Module($1, @$);}
           ;
 
 identifier

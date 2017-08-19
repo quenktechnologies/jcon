@@ -41,16 +41,17 @@ export type Value
     | EnvVar
     | List
     | Dict
+    | Call
     | StringLiteral
     | NumberLiteral
     | BooleanLiteral
     ;
 
-export class Module {
+export class Require {
 
-    type = 'module';
+    type = 'require';
 
-    constructor(public member: Identifier, public module: string, public args: Value[], public location: Location) { }
+    constructor(public module: Module, public member: Identifier, public location: Location) { }
 
 }
 
@@ -58,16 +59,22 @@ export class EnvVar {
 
     type = 'env-var';
 
-    constructor(public key: string, public location: Location) { }
+    constructor(public key: Identifier, public location: Location) { }
+
+}
+
+export class Call {
+
+    type = 'call'
+
+    constructor(public module: Identifier, public args: Value[], public location: Location) { }
 
 }
 
 export class List {
 
     type = 'list';
-    constructor(public members: Value[], public location: Location) {
-
-    }
+    constructor(public members: Value[], public location: Location) { }
 
 }
 
@@ -107,6 +114,15 @@ export class NumberLiteral {
 
     type = 'number-literal';
     constructor(public value: string, public location: Location) { }
+
+}
+
+
+export class Module {
+
+    type = 'module';
+
+    constructor(public module: string, public location: Location) { }
 
 }
 

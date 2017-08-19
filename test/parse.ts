@@ -46,24 +46,24 @@ tests = {
         input: `
 
 test = true
-object = { test = 'yes' number = 2 }
-array = [1, 2, 3]
-path = "\${__dirname}/here"
 list = [1,'two', [3], {value=4}]
-tendrill.app.views.engine = tenhub-server/views/Engine
-module = tenhub
-funcs = path/to/somewhere(1, 'two', [3], {value = 4})
+object = { test = 'yes' number = 2 }
+module = module
+module.as.path = module/as/path
+module.as.relative.path = ./module/with/relative/../path
+array.of.modules = [one, ./1/2/3, other/one|one]
+call = $(funcs 1, 2, [3])
+call.member = $(module/with/member|member {key="value"})
 
-tendrill.app.connections = {
+complex.dict = {
    
     main = {
-        
-       connector = tenhub-server/connectors/mongodb
+       connector = path/to/connector|connector
        options = {
-
+         
  	 collection = "websessions"
 	 autoRemove = "interval"
-	 autoRemoveInterval = \${AUTO_REMOVE_INTERVAL}
+	 autoRemoveInterval = ${'${AUTO_REMOVE_INTERVAL}'}
 
        }
 
