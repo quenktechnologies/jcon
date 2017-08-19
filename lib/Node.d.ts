@@ -25,20 +25,26 @@ export declare class Path {
     type: string;
     constructor(target: Identifier | Path, id: Identifier, location: Location);
 }
-export declare type Value = Module | EnvVar | List | Dict | StringLiteral | NumberLiteral | BooleanLiteral;
-export declare class Module {
+export declare type Value = Module | EnvVar | List | Dict | Call | StringLiteral | NumberLiteral | BooleanLiteral;
+export declare class Require {
+    module: Module;
     member: Identifier;
-    module: string;
+    location: Location;
+    type: string;
+    constructor(module: Module, member: Identifier, location: Location);
+}
+export declare class EnvVar {
+    key: Identifier;
+    location: Location;
+    type: string;
+    constructor(key: Identifier, location: Location);
+}
+export declare class Call {
+    module: Identifier;
     args: Value[];
     location: Location;
     type: string;
-    constructor(member: Identifier, module: string, args: Value[], location: Location);
-}
-export declare class EnvVar {
-    key: string;
-    location: Location;
-    type: string;
-    constructor(key: string, location: Location);
+    constructor(module: Identifier, args: Value[], location: Location);
 }
 export declare class List {
     members: Value[];
@@ -76,6 +82,12 @@ export declare class NumberLiteral {
     location: Location;
     type: string;
     constructor(value: string, location: Location);
+}
+export declare class Module {
+    module: string;
+    location: Location;
+    type: string;
+    constructor(module: string, location: Location);
 }
 export declare class Identifier {
     value: string;
