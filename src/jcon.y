@@ -151,7 +151,7 @@ require
 
 env_var
           : '${' identifier '}'
-            {$$ = new yy.ast.EnvVar($3, @$);  }
+            {$$ = new yy.ast.EnvVar($2, @$);  }
           ;
 
 call

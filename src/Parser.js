@@ -99,7 +99,7 @@ case 8:
 this.$ = new yy.ast.Require($$[$0-2], $$[$0], this._$);
 break;
 case 9:
-this.$ = new yy.ast.EnvVar($$[$0], this._$);  
+this.$ = new yy.ast.EnvVar($$[$0-1], this._$);  
 break;
 case 10:
 this.$ = new yy.ast.Call($$[$0-2], $$[$0-1], this._$);    
