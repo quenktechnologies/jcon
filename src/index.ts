@@ -68,7 +68,7 @@ export const code = (n: nodes.Node): string => {
 
     } else if (n instanceof nodes.EnvVar) {
 
-        return `process.env['${n.key}']`;
+        return `process.env['${code(n.key)}']`;
 
     } else if (n instanceof nodes.Call) {
 
