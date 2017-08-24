@@ -63,7 +63,7 @@ export const code = (n: nodes.Node): string => {
     } else if (n instanceof nodes.Require) {
 
         return `((function(m) { ` +
-            ` return ${n.member ? 'm.' + code(n.member) : 'm.default?m.default:m'} })` +
+            ` return ${n.member ? 'm.' + code(n.member) : 'typeof m.default === \'function\' ? m.default:m'} })` +
             `(require(${code(n.module)})))`
 
     } else if (n instanceof nodes.EnvVar) {
