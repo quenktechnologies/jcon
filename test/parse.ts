@@ -54,6 +54,8 @@ module.as.relative.path = ./module/with/relative/../path
 array.of.modules = [one, ./1/2/3, other/one|one]
 call = $(funcs 1, 2, [3])
 call.member = $(module/with/member|member {key="value"})
+call.noargs = $(funcs)
+call.member.noargs = $(module/with/member|member)
 
 complex.dict = {
    

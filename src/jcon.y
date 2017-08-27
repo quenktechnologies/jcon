@@ -65,6 +65,7 @@ Module [a-zA-Z@][a-zA-Z$_0-9-]*
 <MODULE>'|'                                              return '|';
 <MODULE>{Identifier}       this.popState();              return 'IDENTIFIER';
 <MODULE>','                this.popState();              return ',';
+<MODULE>')'                this.popState();this.popState(); return ')';
 <MODULE>\s+                this.popState();              return;
 
 <ENVVAR>{Identifier}                                     return 'IDENTIFIER';
@@ -157,6 +158,9 @@ env_var
 call
           : '$(' require value_list ')'
             {$$ = new yy.ast.Call($2, $3, @$);    }
+
+          | '$(' require ')'
+            {$$ = new yy.ast.Call($2, [], @$);    }
           ;
 
 list      
