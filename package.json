@@ -1,6 +1,6 @@
 {
   "name": "@quenk/jcon",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "JavaScript Configuration Object Notation",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -22,5 +22,4 @@
     "ts-node": "^3.0.4",
     "typescript": "^2.9.2"
   }
-
 }
