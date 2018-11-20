@@ -1,8 +1,7 @@
 import * as must from 'must';
 import * as fs from 'fs';
-import { parse, compile } from '../src';
+import { parse } from '../src';
 
-var input = null;
 var tests = null;
 
 function json(tree: any): string {
@@ -20,18 +19,13 @@ function makeTest(test, index) {
     var file = index.replace(/\s/g, '-');
 
     if (process.env.GENERATE) {
-        fs.writeFileSync(`./test/expectations/${file}.json`, json(parse(test.input)));
-        fs.writeFileSync(`./test/expectations/${file}.ts`, compile(test.input));
+        fs.writeFileSync(`./test/expectations/${file}.json`, json(parse(test)));
         return;
     }
 
     if (!test.skip) {
 
-        compare(json(parse(test.input)), fs.readFileSync(`./test/expectations/${file}.json`, {
-            encoding: 'utf8'
-        }));
-
-        compare(compile(test.input), fs.readFileSync(`./test/expectations/${file}.ts`, {
+        compare(json(parse(test)), fs.readFileSync(`./test/expectations/${file}.json`, {
             encoding: 'utf8'
         }));
 
@@ -41,60 +35,72 @@ function makeTest(test, index) {
 
 tests = {
 
-    'should work': {
-
-        input: `
-
-test = true
-list = [1,'two', [3], {value=4}]
-object = { test = 'yes' number = 2 }
-module = module
-module.as.path = module/as/path
-module.as.relative.path = ./module/with/relative/../path
-array.of.modules = [one, ./1/2/3, other/one|one]
-call = $(funcs 1, 2, [3])
-call.member = $(module/with/member|member {key="value"})
-call.noargs = $(funcs)
-call.member.noargs = $(module/with/member|member)
-
-complex.dict = {
+    'should recognize booleans':
+        `testTrue = true
+   testFalse = false`,
+    'should recognize lists': 'list = [1,"two", [3], {value=4}]',
+    'should recognize dicts': 'object = { test = "yes" number = 2 }',
+    'should recognize module members': 'module.as.path = module/as/path#member',
+    'should recognize dotted paths': 'module.as.relative.path = ./module/with/relative/../path#member',
+    'should recognize lists of members': 'array.of.modules = [one#default, ./path/to#member(), other/one#one]',
+    'should recognize partially applied modules': 'call = module#func(1, 2, [3])',
+    'should recognize empty partially applied modules': 'call = module#func()',
+    'should recognize partially applied members': 'call = path/to/member#func(1, 2, [3])',
+    'should recognize empty partially applied members': 'call = path/to/member#func()',
+    'should recognize environment variables': 'env = ${VALUE}',
+    'should recognize comments': '-- This is a comment',
+    'should recognize includes': 'include "some path"',
+    'should allow complex dicts':
+        `complex.dict = {
    
     main = {
-       connector = path/to/connector|connector
+       connector = path/to/connector#connector
        options = {
          
  	 collection = "websessions"
 	 autoRemove = "interval"
-	 autoRemoveInterval = ${'${AUTO_REMOVE_INTERVAL}'}
+	 autoRemoveInterval = \${AUTO_REMOVE_INTERVAL}
 
        }
 
     }
    
-}
-
-tendrill.app.filters.session.enabled = true
-tendrill.app.filters.session.options = {httpOnly = true}
-tendrill.filters.csrf.enabled = true
-
-tendrill.app.modules = {
-
- www = lims/modules/www
-
-} 
+}`,
+    'should all together now':
         `
+  include "path/to/file/a"
+  include "path/to/file/b"
 
-    }
+  -- Opening comment.
+  -- Following comment.
+   id = \${ID}
+   name.first = "F"
+   name.last = "L"
+
+   -- Nothing on this line should be parsed. [1,2,3]
+   -- For real
+   app.connections.config = {
+
+       main = {
+
+        connector = path/to/connector#connect
+
+       }
+
+       backup = {
+
+        connector = path/to/connector#backup(1, 2, 3)
+
+       }
+
+   }
+  modules = [path#default, os#default, http#default ]
+  trap = trap#default()
+  `
 
 };
 
 describe('Parser', function() {
-
-    beforeEach(function() {
-
-        input = null;
-
-    });
 
     describe('parse()', function() {
 
