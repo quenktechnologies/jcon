@@ -3,12 +3,15 @@ import * as ast from './ast';
 import { Nodes, Node } from './ast';
 import parser = require('./parser');
 
-const ref: Nodes<Node> = <any>ast;
+/**
+ * tree is a map of reference nodes that can be used during parsing.
+ */
+export const tree: Nodes<Node> = <any>ast;
 
 /**
  * parse source text into an abstract syntax tree.
  */
-export const parse = (str: string, ast: Nodes<Node> = ref): Node => {
+export const parse = <N extends Node>(str: string, ast: Nodes<N>): N => {
 
     parser.parser.yy = { ast };
     return parser.parser.parse(str);

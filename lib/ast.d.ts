@@ -7,15 +7,15 @@ export interface Nodes<N extends Node> {
 /**
  * Node is the common interface all members of the AST implement.
  */
-export declare abstract class Node {
+export interface Node {
     /**
      * type of the Node.
      */
-    abstract type: string;
+    type: string;
     /**
      * location in the source text where the node was parsed from.
      */
-    abstract location: Location;
+    location: Location;
 }
 /**
  * Location indicates the location of a Node in source text.
@@ -30,7 +30,7 @@ export interface Location {
  * The source text of a jcon file is meant to be compiled to
  * a single ES object.
  */
-export declare class File extends Node {
+export declare class File {
     includes: Include[];
     directives: Directive[];
     location: Location;
@@ -42,7 +42,7 @@ export declare class File extends Node {
  *
  * Indicates a path to resolve and parse into the current context.
  */
-export declare class Include extends Node {
+export declare class Include {
     path: string;
     location: Location;
     type: string;
@@ -57,7 +57,7 @@ export declare type Directive = Comment | Property;
  *
  * A line of text prefixed with a '#';
  */
-export declare class Comment extends Node {
+export declare class Comment {
     value: string;
     location: Location;
     type: string;
@@ -68,7 +68,7 @@ export declare class Comment extends Node {
  *
  * A property in a jcon file is simply a top level key value pair.
  */
-export declare class Property extends Node {
+export declare class Property {
     path: Identifier[];
     value: Value;
     location: Location;
@@ -87,7 +87,7 @@ export declare type Value = Module | EnvVar | List | Dict | StringLiteral | Numb
  * A member could be a path to an identifier or the result of
  * calling one.
  */
-export declare class Member extends Node {
+export declare class Member {
     module: Module | Identifier;
     member: Identifier;
     invocation: boolean;
@@ -101,7 +101,7 @@ export declare class Member extends Node {
  *
  * Indicates a reference to an environment variable.
  */
-export declare class EnvVar extends Node {
+export declare class EnvVar {
     key: Identifier;
     location: Location;
     type: string;
@@ -110,7 +110,7 @@ export declare class EnvVar extends Node {
 /**
  * List node.
  */
-export declare class List extends Node {
+export declare class List {
     elements: Value[];
     location: Location;
     type: string;
@@ -119,7 +119,7 @@ export declare class List extends Node {
 /**
  * Dict node.
  */
-export declare class Dict extends Node {
+export declare class Dict {
     properties: Pair[];
     location: Location;
     type: string;
@@ -128,7 +128,7 @@ export declare class Dict extends Node {
 /**
  * Pair node.
  */
-export declare class Pair extends Node {
+export declare class Pair {
     key: Identifier;
     value: Value;
     location: Location;
@@ -138,7 +138,7 @@ export declare class Pair extends Node {
 /**
  * StringLiteral node.
  */
-export declare class StringLiteral extends Node {
+export declare class StringLiteral {
     value: string;
     location: Location;
     type: string;
@@ -147,7 +147,7 @@ export declare class StringLiteral extends Node {
 /**
  * BooleanLiteral node.
  */
-export declare class BooleanLiteral extends Node {
+export declare class BooleanLiteral {
     value: string;
     location: Location;
     type: string;
@@ -156,7 +156,7 @@ export declare class BooleanLiteral extends Node {
 /**
  * NumberLiteral node.
  */
-export declare class NumberLiteral extends Node {
+export declare class NumberLiteral {
     value: string;
     location: Location;
     type: string;
@@ -165,7 +165,7 @@ export declare class NumberLiteral extends Node {
 /**
  * Module node.
  */
-export declare class Module extends Node {
+export declare class Module {
     module: string;
     location: Location;
     type: string;
