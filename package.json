@@ -20,5 +20,8 @@
     "must": "^0.13.4",
     "ts-node": "^3.0.4",
     "typescript": "^2.9.2"
+  },
+  "dependencies": {
+    "@quenk/noni": "^1.2.5"
   }
 }
