@@ -4,24 +4,24 @@
  */
 export interface Nodes<N extends Node> {
 
-  [key:string]: N;
+    [key: string]: N;
 
 }
 
 /**
  * Node is the common interface all members of the AST implement.
  */
-export abstract class Node {
+export interface Node {
 
     /**
      * type of the Node.
      */
-   abstract type: string;
+    type: string;
 
     /**
      * location in the source text where the node was parsed from.
      */
-    abstract location: Location;
+    location: Location;
 
 }
 
@@ -41,14 +41,14 @@ export interface Location {
  * The source text of a jcon file is meant to be compiled to 
  * a single ES object.
  */
-export class File extends Node {
+export class File {
 
     type = 'file';
 
     constructor(
         public includes: Include[],
         public directives: Directive[],
-        public location: Location) { super(); }
+        public location: Location) {  }
 
 }
 
@@ -57,11 +57,11 @@ export class File extends Node {
  * 
  * Indicates a path to resolve and parse into the current context.
  */
-export class Include extends Node {
+export class Include {
 
     type = 'include';
 
-    constructor(public path: string, public location: Location) { super(); }
+    constructor(public path: string, public location: Location) { }
 
 }
 
@@ -75,11 +75,11 @@ export type Directive = Comment | Property;
  *
  * A line of text prefixed with a '#';
  */
-export class Comment extends Node {
+export class Comment {
 
     type = 'comment';
 
-    constructor(public value: string, public location: Location) { super(); }
+    constructor(public value: string, public location: Location) { }
 
 }
 
@@ -88,14 +88,14 @@ export class Comment extends Node {
  *
  * A property in a jcon file is simply a top level key value pair.
  */
-export class Property extends Node {
+export class Property {
 
     type = 'property'
 
     constructor(
         public path: Identifier[],
         public value: Value,
-        public location: Location) { super(); }
+        public location: Location) { }
 
 }
 
@@ -120,7 +120,7 @@ export type Value
  * A member could be a path to an identifier or the result of
  * calling one.
  */
-export class Member extends Node {
+export class Member {
 
     type = 'member';
 
@@ -129,7 +129,7 @@ export class Member extends Node {
         public member: Identifier,
         public invocation: boolean,
         public parameters: Value[],
-        public location: Location) { super(); }
+        public location: Location) { }
 
 }
 
@@ -138,62 +138,62 @@ export class Member extends Node {
  *
  * Indicates a reference to an environment variable.
  */
-export class EnvVar extends Node {
+export class EnvVar{
 
     type = 'env-var';
 
     constructor(
         public key: Identifier,
-        public location: Location) { super(); }
+        public location: Location) {  }
 
 }
 
 /**
  * List node.
  */
-export class List extends Node {
+export class List {
 
     type = 'list';
 
-    constructor(public elements: Value[], public location: Location) { super(); }
+    constructor(public elements: Value[], public location: Location) { }
 
 }
 
 /**
  * Dict node.
  */
-export class Dict extends Node {
+export class Dict {
 
     type = 'dict';
 
-    constructor(public properties: Pair[], public location: Location) { super(); }
+    constructor(public properties: Pair[], public location: Location) { }
 
 }
 
 /**
  * Pair node.
  */
-export class Pair extends Node {
+export class Pair {
 
     type = 'pair';
 
     constructor(
         public key: Identifier,
         public value: Value,
-        public location: Location) { super(); }
+        public location: Location) {  }
 
 }
 
 /**
  * StringLiteral node.
  */
-export class StringLiteral extends Node {
+export class StringLiteral {
 
     type = 'string-literal';
 
     constructor(
         public value: string,
-        public location: Location) { super(); }
+        public location: Location) { }
 
 
 }
@@ -201,33 +201,33 @@ export class StringLiteral extends Node {
 /**
  * BooleanLiteral node.
  */
-export class BooleanLiteral extends Node {
+export class BooleanLiteral {
 
     type = 'boolean-literal';
 
-    constructor(public value: string, public location: Location) { super(); }
+    constructor(public value: string, public location: Location) { }
 
 }
 
 /**
  * NumberLiteral node.
  */
-export class NumberLiteral extends Node {
+export class NumberLiteral {
 
     type = 'number-literal';
 
-    constructor(public value: string, public location: Location) { super(); }
+    constructor(public value: string, public location: Location) { }
 
 }
 
 /**
  * Module node.
  */
-export class Module extends Node {
+export class Module{
 
     type = 'module';
 
-    constructor(public module: string, public location: Location) { super(); }
+    constructor(public module: string, public location: Location) {  }
 
 }
 
