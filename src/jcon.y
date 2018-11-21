@@ -118,6 +118,9 @@ file
 
           | directives EOF
             {$$ = new yy.ast.File([],$1, @$); return $$;}
+
+          | EOF
+            {$$ = new yy.ast.File([], [], @$); return $$;}
           ;
 
 includes
