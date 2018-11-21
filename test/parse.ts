@@ -19,15 +19,21 @@ function makeTest(test, index) {
     var file = index.replace(/\s/g, '-');
 
     if (process.env.GENERATE) {
-        fs.writeFileSync(`./test/expectations/${file}.json`, json(parse(test,tree)));
-        return;
+
+      return  parse(test, tree)
+            .map(json)
+            .map(txt => fs.writeFileSync(`./test/expectations/${file}.json`, txt))
+            .orRight((e: Error) => { throw e; });
+
     }
 
     if (!test.skip) {
 
-        compare(json(parse(test,tree)), fs.readFileSync(`./test/expectations/${file}.json`, {
+      parse(test,tree)
+        .map(json)
+        .map(txt => compare(txt, fs.readFileSync(`./test/expectations/${file}.json`, {
             encoding: 'utf8'
-        }));
+        })));
 
     }
 
