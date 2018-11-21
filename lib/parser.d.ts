@@ -1,14 +1,14 @@
-import { File } from './ast';
+import { Node } from './ast';
 
 /**
  * Parser 
  */
 export interface Parser {
 
-  /**
-   * parse a source text into an AST.
-   */
-    parse(src: string): File;
+    /**
+     * parse a source text into an AST.
+     */
+    parse<N extends Node>(src: string): N;
 
     /**
      * yy contains identifiers used during parsing.
@@ -16,10 +16,5 @@ export interface Parser {
     yy: any;
 
 }
-
-/**
- * parse a source text into an AST.
- */
-export declare function parse(src: string): File;
 
 export declare let parser: Parser;

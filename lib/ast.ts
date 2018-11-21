@@ -1,5 +1,14 @@
 
 /**
+ * Nodes map.
+ */
+export interface Nodes<N extends Node> {
+
+  [key:string]: N;
+
+}
+
+/**
  * Node is the common interface all members of the AST implement.
  */
 export abstract class Node {

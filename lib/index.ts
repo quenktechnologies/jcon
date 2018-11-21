@@ -1,20 +1,14 @@
 /// <reference path='parser.d.ts' />
-import * as nodes from './ast';
+import * as ast from './ast';
+import { Nodes, Node } from './ast';
 import parser = require('./parser');
 
-/**
- * AbstractSyntaxTree
- */
-export interface AbstractSyntaxTree {
-
-    [key: string]: nodes.Node
-
-}
+const ref: Nodes<Node> = <any>ast;
 
 /**
  * parse source text into an abstract syntax tree.
  */
-export const parse = (str: string, ast: AbstractSyntaxTree = <any>nodes): nodes.File => {
+export const parse = (str: string, ast: Nodes<Node> = ref): Node => {
 
     parser.parser.yy = { ast };
     return parser.parser.parse(str);
