@@ -48,7 +48,7 @@ export class File {
     constructor(
         public includes: Include[],
         public directives: Directive[],
-        public location: Location) {  }
+        public location: Location) { }
 
 }
 
@@ -125,7 +125,7 @@ export class Member {
     type = 'member';
 
     constructor(
-        public module: Module | Identifier,
+        public module: Module,
         public member: Identifier,
         public invocation: boolean,
         public parameters: Value[],
@@ -138,13 +138,13 @@ export class Member {
  *
  * Indicates a reference to an environment variable.
  */
-export class EnvVar{
+export class EnvVar {
 
     type = 'env-var';
 
     constructor(
         public key: Identifier,
-        public location: Location) {  }
+        public location: Location) { }
 
 }
 
@@ -180,7 +180,7 @@ export class Pair {
     constructor(
         public key: Identifier,
         public value: Value,
-        public location: Location) {  }
+        public location: Location) { }
 
 }
 
@@ -223,11 +223,11 @@ export class NumberLiteral {
 /**
  * Module node.
  */
-export class Module{
+export class Module {
 
     type = 'module';
 
-    constructor(public module: string, public location: Location) {  }
+    constructor(public module: string, public location: Location) { }
 
 }
 

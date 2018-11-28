@@ -88,13 +88,13 @@ export declare type Value = Member | EnvVar | List | Dict | StringLiteral | Numb
  * calling one.
  */
 export declare class Member {
-    module: Module | Identifier;
+    module: Module;
     member: Identifier;
     invocation: boolean;
     parameters: Value[];
     location: Location;
     type: string;
-    constructor(module: Module | Identifier, member: Identifier, invocation: boolean, parameters: Value[], location: Location);
+    constructor(module: Module, member: Identifier, invocation: boolean, parameters: Value[], location: Location);
 }
 /**
  * EnvVar node.
