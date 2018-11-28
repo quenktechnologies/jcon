@@ -1,7 +1,23 @@
 /// <reference path='parser.d.ts' />
-import * as ast from './ast';
-import {Either, left, right} from '@quenk/noni/lib/data/either';
-import { Nodes, Node } from './ast';
+import { Either, left, right } from '@quenk/noni/lib/data/either';
+import {
+    Nodes,
+    Node,
+    File,
+    Include,
+    Comment,
+    Property,
+    Member,
+    EnvVar,
+    List,
+    Dict,
+    Pair,
+    StringLiteral,
+    NumberLiteral,
+    BooleanLiteral,
+    Module,
+    Identifier
+} from './ast';
 import parser = require('./parser');
 
 /**
@@ -9,26 +25,30 @@ import parser = require('./parser');
  */
 export type Result<N extends Node> = Either<Error, N>;
 
+
 /**
  * tree is a map of reference nodes that can be used during parsing.
  */
-export const tree: Nodes<Node> = <any>ast;
+export const tree: Nodes<Node> = {
+    File, Include, Comment, Property, Member, EnvVar, List, Dict, Pair,
+    StringLiteral, NumberLiteral, BooleanLiteral, Module, Identifier
+}
 
 /**
  * parse source text into an abstract syntax tree.
  */
 export const parse = <N extends Node>(str: string, ast: Nodes<N>): Result<N> => {
 
-  parser.parser.yy = { ast };
+    parser.parser.yy = { ast };
 
-  try {
-    
-    return right(parser.parser.parse(str));
+    try {
 
-  }catch(e) {
+        return right(parser.parser.parse(str));
 
-    return left(e);
+    } catch (e) {
 
-  }
+        return left(e);
+
+    }
 
 }
