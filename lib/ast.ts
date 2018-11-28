@@ -1,10 +1,18 @@
-
 /**
  * Nodes map.
  */
 export interface Nodes<N extends Node> {
 
-    [key: string]: N;
+    [key: string]: Constructor<N>;
+
+}
+
+/**
+ * Constructor function for a generic node.
+ */
+export interface Constructor<N extends Node> {
+
+    new(...p: any[]): N
 
 }
 
@@ -184,12 +192,12 @@ export class Pair {
 
 /**
  * Literal value types.
- */ 
-export type Literal 
- = StringLiteral
- | NumberLiteral
- | BooleanLiteral
- ;
+ */
+export type Literal
+    = StringLiteral
+    | NumberLiteral
+    | BooleanLiteral
+    ;
 
 /**
  * StringLiteral node.

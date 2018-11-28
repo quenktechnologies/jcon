@@ -2,7 +2,13 @@
  * Nodes map.
  */
 export interface Nodes<N extends Node> {
-    [key: string]: N;
+    [key: string]: Constructor<N>;
+}
+/**
+ * Constructor function for a generic node.
+ */
+export interface Constructor<N extends Node> {
+    new (...p: any[]): N;
 }
 /**
  * Node is the common interface all members of the AST implement.
