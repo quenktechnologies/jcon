@@ -104,7 +104,7 @@ export class Property {
  * Property pair.
  */
 export type Value
-    = Module
+    = Member
     | EnvVar
     | List
     | Dict

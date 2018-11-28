@@ -79,7 +79,7 @@ export declare class Property {
  * Value are those nodes that can legally appear on the right-hand side of a
  * Property pair.
  */
-export declare type Value = Module | EnvVar | List | Dict | StringLiteral | NumberLiteral | BooleanLiteral;
+export declare type Value = Member | EnvVar | List | Dict | StringLiteral | NumberLiteral | BooleanLiteral;
 /**
  * Member node.
  *
