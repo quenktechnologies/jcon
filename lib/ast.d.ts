@@ -79,7 +79,7 @@ export declare class Property {
  * Value are those nodes that can legally appear on the right-hand side of a
  * Property pair.
  */
-export declare type Value = Member | EnvVar | List | Dict | StringLiteral | NumberLiteral | BooleanLiteral;
+export declare type Value = Member | EnvVar | List | Dict | Literal;
 /**
  * Member node.
  *
@@ -135,6 +135,10 @@ export declare class Pair {
     type: string;
     constructor(key: Identifier, value: Value, location: Location);
 }
+/**
+ * Literal value types.
+ */
+export declare type Literal = StringLiteral | NumberLiteral | BooleanLiteral;
 /**
  * StringLiteral node.
  */

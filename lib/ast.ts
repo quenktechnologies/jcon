@@ -108,9 +108,7 @@ export type Value
     | EnvVar
     | List
     | Dict
-    | StringLiteral
-    | NumberLiteral
-    | BooleanLiteral
+    | Literal
     ;
 
 /**
@@ -183,6 +181,15 @@ export class Pair {
         public location: Location) { }
 
 }
+
+/**
+ * Literal value types.
+ */ 
+export type Literal 
+ = StringLiteral
+ | NumberLiteral
+ | BooleanLiteral
+ ;
 
 /**
  * StringLiteral node.
