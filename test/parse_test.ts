@@ -20,7 +20,7 @@ function makeTest(test, index) {
 
     if (process.env.GENERATE) {
 
-      return  parse(test, tree)
+        return parse(test, tree)
             .map(json)
             .map(txt => fs.writeFileSync(`./test/expectations/${file}.json`, txt))
             .orRight((e: Error) => { throw e; });
@@ -29,11 +29,11 @@ function makeTest(test, index) {
 
     if (!test.skip) {
 
-      parse(test,tree)
-        .map(json)
-        .map(txt => compare(txt, fs.readFileSync(`./test/expectations/${file}.json`, {
-            encoding: 'utf8'
-        })));
+        parse(test, tree)
+            .map(json)
+            .map(txt => compare(txt, fs.readFileSync(`./test/expectations/${file}.json`, {
+                encoding: 'utf8'
+            })));
 
     }
 
@@ -46,6 +46,7 @@ tests = {
    testFalse = false`,
     'should recognize lists': 'list = [1,"two", [3], {value=4}]',
     'should recognize dicts': 'object = { test = "yes" number = 2 }',
+    'should recognize strings': 'string = "this is a string"',
     'should recognize module members': 'module.as.path = module/as/path#member',
     'should recognize dotted paths': 'module.as.relative.path = ./module/with/relative/../path#member',
     'should recognize lists of members': 'array.of.modules = [one#default, ./path/to#member(), other/one#one]',
