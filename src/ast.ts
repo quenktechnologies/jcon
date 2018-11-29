@@ -69,7 +69,7 @@ export class Include {
 
     type = 'include';
 
-    constructor(public path: string, public location: Location) { }
+    constructor(public path: StringLiteral, public location: Location) { }
 
 }
 

@@ -49,10 +49,10 @@ export declare class File {
  * Indicates a path to resolve and parse into the current context.
  */
 export declare class Include {
-    path: string;
+    path: StringLiteral;
     location: Location;
     type: string;
-    constructor(path: string, location: Location);
+    constructor(path: StringLiteral, location: Location);
 }
 /**
  * Directive found in a file's source text.
