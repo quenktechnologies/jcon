@@ -147,10 +147,10 @@ export declare class Pair {
  * (Not used, needed by the tdc tool).
  */
 export declare class ArrowFunction {
-    body: Value[];
+    body: string;
     location: Location;
     type: string;
-    constructor(body: Value[], location: Location);
+    constructor(body: string, location: Location);
 }
 /**
  * Literal value types.

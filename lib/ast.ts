@@ -201,7 +201,7 @@ export class ArrowFunction {
     type = 'arrow-function';
 
     constructor(
-        public body: Value[],
+        public body: string,
         public location: Location) { }
 
 }
