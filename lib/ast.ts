@@ -117,6 +117,7 @@ export type Value
     | List
     | Dict
     | Literal
+    | ArrowFunction
     ;
 
 /**
@@ -186,6 +187,21 @@ export class Pair {
     constructor(
         public key: Identifier,
         public value: Value,
+        public location: Location) { }
+
+}
+
+/**
+ * ArrowFunction node.
+ *
+ * (Not used, needed by the tdc tool).
+ */
+export class ArrowFunction {
+
+    type = 'arrow-function';
+
+    constructor(
+        public body: Value[],
         public location: Location) { }
 
 }

@@ -85,7 +85,7 @@ export declare class Property {
  * Value are those nodes that can legally appear on the right-hand side of a
  * Property pair.
  */
-export declare type Value = Member | EnvVar | List | Dict | Literal;
+export declare type Value = Member | EnvVar | List | Dict | Literal | ArrowFunction;
 /**
  * Member node.
  *
@@ -140,6 +140,17 @@ export declare class Pair {
     location: Location;
     type: string;
     constructor(key: Identifier, value: Value, location: Location);
+}
+/**
+ * ArrowFunction node.
+ *
+ * (Not used, needed by the tdc tool).
+ */
+export declare class ArrowFunction {
+    body: Value[];
+    location: Location;
+    type: string;
+    constructor(body: Value[], location: Location);
 }
 /**
  * Literal value types.
