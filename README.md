@@ -2,14 +2,14 @@
 # JCON
 
 JavaScript Configuration Object Notation (JCON) is a JSON inspired syntax for
-configuration files in ECMAScript programs. This module provides a parser.
+configuration files in ECMAScript programs. 
 
-## Structure
+This module provides a parser and interpreter for the language.
+
+## Syntax
 
 A single JCON file is can be thought of as an object literal without the opening
 and closing braces.
-
-## Syntax
 
 ### Includes
 
@@ -31,11 +31,11 @@ like. Example:
 
 ### Properties
 
-A property is a key value pair that occurs within the file or nested dict(ionary).
-The key part can be a sequence of identifiers separated by a `.`. If so,
-it is seen as a path and should be expanded by the compiler.
+A property is a key value pair that occurs within the file or a nested 
+dict(ionary). The key part is a sequence of one or more identifiers separated 
+by a `.`. This is interpreted as the path to the value in the root object.
 
-The value part can be one of:
+A value can be one of:
 1. string
 2. number
 3. boolean
@@ -44,11 +44,12 @@ The value part can be one of:
 6. module
 7. environment variable
 
-The key is separated from the value part via a single '='. Example:
+The key is separated from the value part via a single `=`, not a `:`. 
+Example:
 
 ```jcon
 
-   id = \${ID}
+   id = ${ID}
    name.first = "Jane"
    name.last = "Doe"
    options.active = true
@@ -76,7 +77,7 @@ The key is separated from the value part via a single '='. Example:
 ```
 
 ### Strings
-Strings must only be wrapped in double quotes `"`.
+Strings are wrapped in double quotes `"`.
 
 ### Numbers
 Numbers map directly to ECMAScript numbers.
@@ -86,7 +87,7 @@ Booleans are either the constant `true` or `false`.
 
 ### Lists
 
-Lists are a sequence of comma separated values surronded by square braces `[]`.
+Lists are a sequence of comma separated values surrounded by square braces `[]`.
 Example:
 
 ```jcon
@@ -95,8 +96,9 @@ this.is.a.list = [1, "two", /path/to#three]
 
 ### Dictonary
 
-A dictionary is a set of key value pairs, simillar to an ECMAScript object
-literal. Key value pairs are denoted the same way as properties. Example:
+A dictionary is a set of key value pairs, similar to an ECMAScript object
+literal. Key value pairs are denoted the same way as properties. 
+Example:
 
 ```jcon
 dict = {
@@ -109,13 +111,11 @@ dict = {
 
 ### Modules
 
-Modules indicate a value comes from some node module. The syntax allows for any
-single member of a module to be reference as well as optionally invoked with
-arguments.
+Modules indicate a value comes from a node module file. 
+The syntax allows for any single member of a module to be referenced as well as optionally invoked with arguments.
 
 A module is simply a path to be resolved followed by the '#' symbol and
-an identifier. The identifier must be the name of the required export member
-to sourcefrom the module. 
+an identifier. The identifier must be the name of the desired export member.
 
 If this member is to be invoked (called/applied) then a tuple of values may
 be appended (with no space in between). Example:
@@ -128,7 +128,7 @@ member = ./path/to/my/module#member
 other = ./path/to/my/other#member()
 
 -- With arguments
-client = connect-mongo#(express-session#default)
+client = connect-mongo#(express-session#default,{options:true})
 ```
 
 ### Environment Variables
