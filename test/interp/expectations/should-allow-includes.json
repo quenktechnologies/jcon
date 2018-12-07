@@ -1,0 +1,1 @@
+{"test":{"modules":{"c":{"name":"c","module":"modulec"},"b":{"name":"b","module":"b"},"a":{"name":"a","module":"a2"}},"has":{"module":{"c":true,"b":true,"a":true}}}}
