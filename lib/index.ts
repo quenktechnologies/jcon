@@ -52,3 +52,11 @@ export const parse = <N extends Node>(str: string, ast: Nodes<N>): Result<N> => 
     }
 
 }
+
+/**
+ * parseDefault 
+ *
+ * Uses the builtin AST.
+ */
+export const parseDefault = (src: string): Result<Node> =>
+    parse(src, tree)

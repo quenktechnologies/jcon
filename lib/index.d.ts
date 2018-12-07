@@ -13,3 +13,9 @@ export declare const tree: Nodes<Node>;
  * parse source text into an abstract syntax tree.
  */
 export declare const parse: <N extends Node>(str: string, ast: Nodes<N>) => Either<Error, N>;
+/**
+ * parseDefault
+ *
+ * Uses the builtin AST.
+ */
+export declare const parseDefault: (src: string) => Either<Error, Node>;
