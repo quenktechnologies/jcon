@@ -13,6 +13,7 @@
   "author": "Quenk Technologies Limited <dev@quenk.com> (http://quenk.com)",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@quenk/must": "^1.0.4",
     "@types/mocha": "^2.2.48",
     "@types/node": "^7.10.2",
     "jison-gho": "^0.6.1-215",
@@ -22,6 +23,7 @@
     "typescript": "^2.9.2"
   },
   "dependencies": {
-    "@quenk/noni": "^1.2.5"
+    "@quenk/noni": "^1.8.3",
+    "property-seek": "^3.1.1"
   }
 }
