@@ -1,0 +1,9 @@
+test.modules.c = {
+
+  name = "c"
+
+  module = ./modulec#init
+
+}
+
+test.has.module.c = true

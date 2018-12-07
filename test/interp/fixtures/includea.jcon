@@ -1,0 +1,11 @@
+include "./b/includeb.jcon"
+
+test.modules.a = {
+
+  name = "a"
+
+  module = ./modulea#init(2)
+
+}
+
+test.has.module.a = true

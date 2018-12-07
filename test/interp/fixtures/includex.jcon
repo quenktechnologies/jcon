@@ -1,0 +1,3 @@
+test.modules.names = ["a", "b", "c"]
+test.has.module.x = true
+test.modules.count = 4
