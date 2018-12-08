@@ -1,9 +1,8 @@
 import { must } from '@quenk/must';
 import { toPromise, attempt } from '@quenk/noni/lib/control/monad/future';
 import { writeTextFile, readTextFile } from '@quenk/noni/lib/io/file';
-import { FileSystemLoader } from '../../src/interp/context/loader/file-system';
+import {newContext} from '../../src/interp/context/global/node';
 import { interp } from '../../src/interp';
-import { parser as jcon } from '../../src/interp/context/parser';
 
 const EXPECTATIONS = `${__dirname}/expectations`;
 
@@ -41,19 +40,6 @@ const tests = {
   `
 };
 
-const newContext = (path: string) => ({
-
-    loader: new FileSystemLoader(path),
-
-    parsers: {
-
-        jcon
-
-    },
-
-    env: process.env
-
-})
 const compare = (tree: any, that: any) => {
     must(tree).equate(that);
 }
