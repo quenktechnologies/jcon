@@ -26,78 +26,36 @@ CharacterEscapeSequence {SingleEscapeCharacter}|{NonEscapeCharacter}
 EscapeSequence {CharacterEscapeSequence}|{OctalEscapeSequence}|{HexEscapeSequence}|{UnicodeEscapeSequence}
 DoubleStringCharacter ([^\"\\\n\r]+)|(\\{EscapeSequence})|{LineContinuation}
 StringLiteral (\"{DoubleStringCharacter}*\")
-Module [.a-zA-Z@$][.a-zA-Z@$-_/]*
+Org [@][_-a-zA-Z0-9]+
 Characters [^\n]*
 
 /* Lexer flags */
 %options flex
-%x COMMENT
-%x VALUE
-%x ENVVAR
-%x DICT
-%x LIST
-%x MODULE
-%x MEMBER
-%x INVOKE
-%x PARAMS
 %%
 
 /* Lexer rules */
-<INITIAL>\s+                                             return;
-<INITIAL>'include'                                       return 'INCLUDE';
-<INITIAL>{Identifier}                                    return 'IDENTIFIER';
-<INITIAL>{StringLiteral}                                 return 'STRING_LITERAL';
-<INITIAL>'--'             this.begin('COMMENT');         return 'COMMENT';
-<COMMENT>{Characters}     this.popState();               return 'CHARACTERS';
-<INITIAL>'='              this.begin('VALUE');           return '=';
-<VALUE>\s+                                               return;
-<VALUE>'true'             this.popState();               return 'TRUE';
-<VALUE>'false'            this.popState();               return 'FALSE';
-<VALUE>{NumberLiteral}    this.popState();               return 'NUMBER_LITERAL';
-<VALUE>{StringLiteral}    this.popState();               return 'STRING_LITERAL';
-<VALUE>{Module}           this.popState(); this.begin('MODULE'); return 'MODULE';
-<MODULE>'#'               this.popState(); this.begin('MEMBER'); return '#';
-<MEMBER>{Identifier}      this.popState(); this.begin('INVOKE'); return 'IDENTIFIER';
-<INVOKE>\s+               this.popState();               return;
-<INVOKE>','               this.popState();               return ',';
-<INVOKE>']'               this.popState();               return ']';
-<INVOKE>'('               this.popState(); this.begin('PARAMS'); return '(';
-<PARAMS>\s+                                              return;
-<PARAMS>'true'                                           return 'TRUE';
-<PARAMS>'false'                                          return 'FALSE';
-<PARAMS>{NumberLiteral}                                  return 'NUMBER_LITERAL';
-<PARAMS>{StringLiteral}                                  return 'STRING_LITERAL';
-<PARAMS>{Module}          this.begin('MODULE');          return 'MODULE';
-<PARAMS>'${'              this.begin('ENVVAR');          return '${';
-<PARAMS>'{'               this.begin('DICT');            return '{';
-<PARAMS>'['               this.begin('LIST');            return '[';
-<PARAMS>')'               this.popState();               return ')';
-<VALUE>'${'               this.popState(); this.begin('ENVVAR'); return '${';
-<ENVVAR>{Identifier}                                     return 'IDENTIFIER';
-<ENVVAR>'}'               this.popState();               return '}';
-<VALUE>'{'                this.popState(); this.begin('DICT');   return '{';
-<DICT>\s+                                                return; 
-<DICT>{Identifier}                                       return 'IDENTIFIER';
-<DICT>'='                 this.begin('VALUE'); return '=';
-<DICT>'}'                 this.popState();               return '}';
-<VALUE>'['                this.popState(); this.begin('LIST'); return '[';
-<LIST>\s+                                                return;
-<LIST>'true'                                             return 'TRUE';
-<LIST>'false'                                            return 'FALSE';
-<LIST>{NumberLiteral}                                    return 'NUMBER_LITERAL';
-<LIST>{StringLiteral}                                    return 'STRING_LITERAL';
-<LIST>{Module}            this.begin('MODULE');          return 'MODULE';
-<LIST>'${'                this.begin('ENVVAR');          return '${';
-<LIST>'{'                 this.begin('DICT');            return '{';
-<LIST>'['                 this.begin('LIST');            return '[';
-<LIST>']'                 this.popState();               return ']';
-<*>'|'                                                   return '|';
+\s+                                                      return;
+'include'                                                return 'INCLUDE';
+'true'                                                   return 'TRUE';
+'false'                                                  return 'FALSE';
+{Org}                                                    return 'ORG';
+{Identifier}                                             return 'IDENTIFIER';
+{StringLiteral}                                          return 'STRING_LITERAL';
+{NumberLiteral}                                          return 'NUMBER_LITERAL';
+<*>'--'{Characters}                                      return 'COMMENT';
+<*>'${'                                                  return '${'
+<*>'$('                                                  return '$('
+<*>'='                                                   return '=';
+<*>'$'                                                   return '$';
+<*>'['                                                   return '[';
+<*>']'                                                   return ']';
+<*>'{'                                                   return '{';
+<*>'#'                                                   return '#';
+<*>'}'                                                   return '}';
 <*>','                                                   return ',';
 <*>'('                                                   return '(';
 <*>')'                                                   return ')';
-<*>'%'                                                   return '%';
-<*>';'                                                   return ';';
-<*>':'                                                   return ':';
+<*>'..'                                                  return '..';
 <*>'.'                                                   return '.';
 <*>'/'                                                   return '/';
 <*><<EOF>>                                               return 'EOF';
@@ -151,8 +109,8 @@ directives
           ;
 
 comment
-          : COMMENT CHARACTERS
-            {$$ = new yy.ast.Comment($2, @$);}
+          : COMMENT 
+            {$$ = new yy.ast.Comment($1.slice(2), @$);}
           ;
 
 property 
@@ -165,15 +123,20 @@ path
           : identifier
             {$$ = [$1];}
 
-          | module
-            {$$ = [$1];}
-
           | path '.' identifier
             {$$ = $1.concat($3); }
           ;
 
 value
-          : (member|call|env_var|list|dict|string_literal|number_literal|boolean_literal)
+          : (
+             member
+             |var
+             |envvar
+             |list
+             |dict
+             |string_literal
+             |number_literal
+             |boolean_literal)
           ;
 
 member
@@ -188,9 +151,40 @@ member
             {$$ = new yy.ast.Member($1, $3, true, $5, @$);}
           ;
 
+uri
+          : '.'
+            {$$ = [$1];}
+
+          | '..'
+            {$$ = [$1];}
+
+          | org
+            {$$ = [$1];}
+
+          | identifier 
+            {$$ = [$1];}
+
+          | uri '/' '.' 
+            {$$ = $1.concat($2, $3);}
+          
+          | uri '/' '..'
+            {$$ = $1.concat($2, $3);}
+
+          | uri '/' org
+            {$$ = $1.concat($2, $3);}
+
+          | uri '/' identifier
+            {$$ = $1.concat($2, $3);}
+          ;
+
 module
-          : MODULE
-            {$$ = new yy.ast.Module($1, @$);}
+          : uri
+            {$$ = new yy.ast.Module($1.join(''), @$);}
+          ;
+
+org
+          : ORG
+            { $$ = $1;}
           ;
 
 parameters
@@ -202,7 +196,12 @@ parameters
             {$$ = $1.concat($3);}
           ;
 
-env_var
+var
+          : '$(' identifier ')' 
+            {$$ = new yy.ast.Var($2, @$);}
+          ;
+
+envvar
           : '${' identifier '}'
             {$$ = new yy.ast.EnvVar($2, @$);  }
           ;
@@ -235,7 +234,7 @@ pair
 
 string_literal
           : STRING_LITERAL 
-          {$$ = new yy.ast.StringLiteral($1.slice(1, -1), @$); }
+            {$$ = new yy.ast.StringLiteral($1.slice(1, -1), @$); }
           ;
 
 boolean_literal

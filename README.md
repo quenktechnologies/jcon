@@ -42,7 +42,8 @@ A value can be one of:
 4. list
 5. dictionary
 6. module
-7. environment variable
+7. context variables
+8. environment variable
 
 The key is separated from the value part via a single `=`, not a `:`. 
 Example:
@@ -130,6 +131,16 @@ other = ./path/to/my/other#member()
 -- With arguments
 client = connect-mongo#(express-session#default,{options:true})
 ```
+### Context Variables
+A context variable allows a variable to be referenced from the enclosing
+context. A context variable has the following syntax where "variable" will
+be the referenced variable's name:
+
+```jcon
+ value = $(variable)
+```
+The actual value or availiblity of the variable is determined by the 
+implementation.
 
 ### Environment Variables
 

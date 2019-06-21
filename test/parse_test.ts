@@ -54,6 +54,7 @@ tests = {
     'should recognize empty partially applied modules': 'call = module#func()',
     'should recognize partially applied members': 'call = path/to/member#func(1, 2, [3])',
     'should recognize empty partially applied members': 'call = path/to/member#func()',
+    'should recognize variables': 'env = $(value)',
     'should recognize environment variables': 'env = ${VALUE}',
     'should recognize comments': '-- This is a comment',
     'should recognize includes': 'include "some path"',

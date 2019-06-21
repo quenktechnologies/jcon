@@ -63,6 +63,7 @@ const flatPath = (path: ast.Identifier[]): string =>
 export const interpValue = (ctx: FileContext, val: ast.Value): Future<Type> =>
     <Future<Type>>match(val)
         .caseOf(ast.Member, interpMember(ctx))
+        .caseOf(ast.EnvVar, interpVar(ctx))
         .caseOf(ast.EnvVar, interpEnvVar(ctx))
         .caseOf(ast.List, interpList(ctx))
         .caseOf(ast.Dict, dict2TS(ctx))
@@ -100,6 +101,8 @@ const interpMember = (ctx: FileContext) => (m: ast.Member): Future<Type> => {
     }
 
 }
+
+const interpVar = (_: FileContext) => (_: ast.Var): Future<string> => pure("");
 
 const interpEnvVar = (ctx: FileContext) => (e: ast.EnvVar): Future<string> =>
     pure(<string>ctx.global.env[e.key.value]);
