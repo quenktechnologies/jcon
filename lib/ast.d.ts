@@ -85,7 +85,7 @@ export declare class Property {
  * Value are those nodes that can legally appear on the right-hand side of a
  * Property pair.
  */
-export declare type Value = Member | EnvVar | List | Dict | Literal | ArrowFunction;
+export declare type Value = Member | Var | EnvVar | List | Dict | Literal | ArrowFunction;
 /**
  * Member node.
  *
@@ -101,6 +101,17 @@ export declare class Member {
     location: Location;
     type: string;
     constructor(module: Module, member: Identifier, invocation: boolean, parameters: Value[], location: Location);
+}
+/**
+ * Var node.
+ *
+ * References a variable in the scope of conf file.
+ */
+export declare class Var {
+    key: Identifier;
+    location: Location;
+    type: string;
+    constructor(key: Identifier, location: Location);
 }
 /**
  * EnvVar node.

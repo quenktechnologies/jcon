@@ -113,6 +113,7 @@ export class Property {
  */
 export type Value
     = Member
+    | Var
     | EnvVar
     | List
     | Dict
@@ -136,6 +137,21 @@ export class Member {
         public member: Identifier,
         public invocation: boolean,
         public parameters: Value[],
+        public location: Location) { }
+
+}
+
+/**
+ * Var node.
+ *
+ * References a variable in the scope of conf file.
+ */
+export class Var {
+
+    type = 'var';
+
+    constructor(
+        public key: Identifier,
         public location: Location) { }
 
 }

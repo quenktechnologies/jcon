@@ -8,6 +8,7 @@ import {
     Comment,
     Property,
     Member,
+    Var,
     EnvVar,
     List,
     Dict,
@@ -30,7 +31,7 @@ export type Result<N extends Node> = Either<Error, N>;
  * tree is a map of reference nodes that can be used during parsing.
  */
 export const tree: Nodes<Node> = {
-    File, Include, Comment, Property, Member, EnvVar, List, Dict, Pair,
+    File, Include, Comment, Property, Member, Var, EnvVar, List, Dict, Pair,
     StringLiteral, NumberLiteral, BooleanLiteral, Module, Identifier
 }
 
