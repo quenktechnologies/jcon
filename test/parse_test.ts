@@ -48,6 +48,7 @@ tests = {
     'should recognize dicts': 'object = { test = "yes" number = 2 }',
     'should recognize strings': 'string = "this is a string"',
     'should recognize module members': 'module.as.path = module/as/path#member',
+    'should recognize org module members': 'either = @quenk/noni/lib/data/either#Either',
     'should recognize dotted paths': 'module.as.relative.path = ./module/with/relative/../path#member',
     'should recognize lists of members': 'array.of.modules = [one#default, ./path/to#member(), other/one#one]',
     'should recognize partially applied modules': 'call = module#func(1, 2, [3])',

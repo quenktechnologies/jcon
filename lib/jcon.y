@@ -26,7 +26,7 @@ CharacterEscapeSequence {SingleEscapeCharacter}|{NonEscapeCharacter}
 EscapeSequence {CharacterEscapeSequence}|{OctalEscapeSequence}|{HexEscapeSequence}|{UnicodeEscapeSequence}
 DoubleStringCharacter ([^\"\\\n\r]+)|(\\{EscapeSequence})|{LineContinuation}
 StringLiteral (\"{DoubleStringCharacter}*\")
-Org [@][_-a-zA-Z0-9]+
+Org [@][-_a-zA-Z0-9]+
 Characters [^\n]*
 
 /* Lexer flags */
@@ -153,38 +153,33 @@ member
 
 uri
           : '.'
-            {$$ = [$1];}
+            {$$ = $1;}
 
           | '..'
-            {$$ = [$1];}
+            {$$ = $1;}
 
-          | org
-            {$$ = [$1];}
+          | ORG
+            {$$ = $1;}
 
-          | identifier 
-            {$$ = [$1];}
+          | IDENTIFIER
+            {$$ = $1;}
 
           | uri '/' '.' 
-            {$$ = $1.concat($2, $3);}
+            {$$ = $1+$2+$3;}
           
           | uri '/' '..'
-            {$$ = $1.concat($2, $3);}
+            {$$ = $1+$2+$3;}
 
-          | uri '/' org
-            {$$ = $1.concat($2, $3);}
+          | uri '/' ORG
+            {$$ = $1+$2+$3;}
 
-          | uri '/' identifier
-            {$$ = $1.concat($2, $3);}
+          | uri '/' IDENTIFIER
+            {$$ = $1+$2+$3;}
           ;
 
 module
           : uri
-            {$$ = new yy.ast.Module($1.join(''), @$);}
-          ;
-
-org
-          : ORG
-            { $$ = $1;}
+            {$$ = new yy.ast.Module($1, @$);}
           ;
 
 parameters
