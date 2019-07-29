@@ -109,9 +109,10 @@ export declare class Member {
  */
 export declare class Var {
     key: Identifier;
+    filters: Filter[];
     location: Location;
     type: string;
-    constructor(key: Identifier, location: Location);
+    constructor(key: Identifier, filters: Filter[], location: Location);
 }
 /**
  * EnvVar node.
@@ -120,9 +121,21 @@ export declare class Var {
  */
 export declare class EnvVar {
     key: Identifier;
+    filters: Filter[];
     location: Location;
     type: string;
-    constructor(key: Identifier, location: Location);
+    constructor(key: Identifier, filters: Filter[], location: Location);
+}
+/**
+ * Filter node.
+ *
+ * Indicates functions that should be applied to a variable before use.
+ */
+export declare class Filter {
+    name: Identifier;
+    location: Location;
+    type: string;
+    constructor(name: Identifier, location: Location);
 }
 /**
  * List node.

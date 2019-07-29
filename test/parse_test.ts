@@ -105,7 +105,9 @@ tests = {
    }
   modules = [path#default, os#default, http#default ]
   trap = trap#default()
-  `
+  `,
+    'should allow filters on vars': 'test = $(avar|string)',
+    'should allow filters on envars': 'test = ${ENVAR|number}'
 
 };
 

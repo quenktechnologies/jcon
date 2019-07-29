@@ -152,6 +152,7 @@ export class Var {
 
     constructor(
         public key: Identifier,
+        public filters: Filter[],
         public location: Location) { }
 
 }
@@ -167,6 +168,22 @@ export class EnvVar {
 
     constructor(
         public key: Identifier,
+        public filters: Filter[],
+        public location: Location) { }
+
+}
+
+/**
+ * Filter node.
+ *
+ * Indicates functions that should be applied to a variable before use.
+ */
+export class Filter {
+
+    type = 'filter';
+
+    constructor(
+        public name: Identifier,
         public location: Location) { }
 
 }

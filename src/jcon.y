@@ -58,6 +58,7 @@ Characters [^\n]*
 <*>'..'                                                  return '..';
 <*>'.'                                                   return '.';
 <*>'/'                                                   return '/';
+<*>'|'                                                   return '|';
 <*><<EOF>>                                               return 'EOF';
 
 /lex
@@ -192,14 +193,28 @@ parameters
           ;
 
 var
-          : '$(' identifier ')' 
-            {$$ = new yy.ast.Var($2, @$);}
+          : '$(' identifier filters? ')' 
+            {$$ = new yy.ast.Var($2, $3||[], @$);}
           ;
 
 envvar
-          : '${' identifier '}'
-            {$$ = new yy.ast.EnvVar($2, @$);  }
+          : '${' identifier filters? '}'
+            {$$ = new yy.ast.EnvVar($2, $3||[], @$);  }
           ;
+
+filters
+          : '|' filter
+            {$$ = [$2]; }
+
+          | filters '|' filter
+            {$$ = $1.concat($3); }
+          ;
+
+filter
+          : identifier
+            {$$ = new yy.ast.Filter($1, @$); }
+          ;
+
 
 list      
           : '[' ']'

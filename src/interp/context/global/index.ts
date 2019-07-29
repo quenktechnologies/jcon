@@ -1,5 +1,6 @@
 import { Loader } from '../loader';
 import { Parser } from '../parser';
+import { Type } from '@quenk/noni/lib/data/type';
 
 /**
  * Global context all files are interpreted in.
@@ -20,6 +21,15 @@ export interface Global {
          * jcon parser configured.
          */
         jcon: Parser
+
+    },
+
+    /**
+     * functions available for application.
+     */
+    functions: {
+
+        [key: string]: (...args: Type[]) => Type
 
     },
 
