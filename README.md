@@ -153,6 +153,21 @@ value read:
 value = ${VALUE}
 ```
 
+### Filters
+
+As at v0.14.0, context variables and environment variables now support a filter
+syntax:
+
+```jcon
+a = ${VALUE|string}
+
+b = $(value|number)
+
+```
+
+This syntax is useful for casting values to specific types using the standard
+ECMAScript constructors.
+
 ## License
 
 Apache 2.0 Quenk Technologies Limited © 2019.
