@@ -8,7 +8,7 @@ This module provides a parser and interpreter for the language.
 
 ## Syntax
 
-See the [spec.md] file for (https://github.com/quenktechnologies/jcon/blob/master/spec.md). 
+See the [spec.md](https://github.com/quenktechnologies/jcon/blob/master/spec.md). 
 
 ## License
 
