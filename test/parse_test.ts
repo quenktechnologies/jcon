@@ -5,7 +5,9 @@ import { tree, parse } from '../src';
 var tests = null;
 
 function json(tree: any): string {
+
     return JSON.stringify(tree);
+
 }
 
 function compare(tree: any, that: any): void {
@@ -31,9 +33,12 @@ function makeTest(test, index) {
 
         parse(test, tree)
             .map(json)
-            .map(txt => compare(txt, fs.readFileSync(`./test/expectations/${file}.json`, {
-                encoding: 'utf8'
-            })));
+            .map(txt =>
+                compare(txt,
+                    fs.readFileSync(`./test/expectations/${file}.json`, {
+                        encoding: 'utf8'
+                    })))
+            .orRight((e: Error) => { throw e; });
 
     }
 
@@ -46,12 +51,12 @@ tests = {
    testFalse = false`,
     'should recognize lists': 'list = [1,"two", [3], {value=4}]',
     'should recognize dicts': 'object = { test = "yes" number = 2 }',
-    'should recognize strings': 'string = "this is a string"',
+    'should recognize strings': 'string = "this is a 中文 string"',
     'should recognize module members': 'module.as.path = module/as/path#member',
     'should recognize org module members': 'either = @quenk/noni/lib/data/either#Either',
     'should recognize dotted paths': 'module.as.relative.path = ./module/with/relative/../path#member',
     'should recognize lists of members': 'array.of.modules = [one#default, ./path/to#member(), other/one#one]',
-    'should recognize partially applied modules': 'call = module#func(1, 2, [3])',
+    'should recognize partially applied modules': 'call = module#func(1, 2, [3.3])',
     'should recognize empty partially applied modules': 'call = module#func()',
     'should recognize partially applied members': 'call = path/to/member#func(1, 2, [3])',
     'should recognize empty partially applied members': 'call = path/to/member#func()',

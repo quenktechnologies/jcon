@@ -2,28 +2,19 @@
 %lex
 
 /* Definitions */
-DecimalDigit [0-9]
 DecimalDigits [0-9]+
 NonZeroDigit [1-9]
-OctalDigit [0-7]
-HexDigit [0-9a-fA-F]
-ExponentIndicator [eE]
-SignedInteger [+-]?[0-9]+
 DecimalIntegerLiteral [-]?([0]|({NonZeroDigit}{DecimalDigits}*))
-ExponentPart {ExponentIndicator}{SignedInteger}
-OctalIntegerLiteral [0]{OctalDigit}+
-HexIntegerLiteral [0][xX]{HexDigit}+
-DecimalLiteral ([-]?{DecimalIntegerLiteral}\.{DecimalDigits}*{ExponentPart}?)|(\.{DecimalDigits}{ExponentPart}?)|({DecimalIntegerLiteral}{ExponentPart}?)
-NumberLiteral {DecimalLiteral}|{HexIntegerLiteral}|{OctalIntegerLiteral}
+
+NumberLiteral ([-]?{DecimalIntegerLiteral}\.{DecimalDigits}*)|(\.{DecimalDigits})|({DecimalIntegerLiteral})
+
 Identifier [a-zA-Z$_][a-zA-Z$_0-9-]*
 LineContinuation \\(\r\n|\r|\n)
-OctalEscapeSequence (?:[1-7][0-7]{0,2}|[0-7]{2,3})
-HexEscapeSequence [x]{HexDigit}{2}
+HexDigit [0-9a-fA-F]
 UnicodeEscapeSequence [u]{HexDigit}{4}
 SingleEscapeCharacter [\'\"\\bfnrtv]
-NonEscapeCharacter [^\'\"\\bfnrtv0-9xu]
-CharacterEscapeSequence {SingleEscapeCharacter}|{NonEscapeCharacter}
-EscapeSequence {CharacterEscapeSequence}|{OctalEscapeSequence}|{HexEscapeSequence}|{UnicodeEscapeSequence}
+CharacterEscapeSequence {SingleEscapeCharacter}
+EscapeSequence {CharacterEscapeSequence}|{UnicodeEscapeSequence}
 DoubleStringCharacter ([^\"\\\n\r]+)|(\\{EscapeSequence})|{LineContinuation}
 StringLiteral (\"{DoubleStringCharacter}*\")
 Org [@][-_a-zA-Z0-9]+
