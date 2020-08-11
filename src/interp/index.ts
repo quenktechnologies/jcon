@@ -1,13 +1,16 @@
 import * as ast from '../ast';
-import { set } from 'property-seek';
+
+import { set } from '@quenk/noni/lib/data/record/path';
 import {
     Future,
     raise,
     pure,
-    parallel
+    parallel,
+    sequential
 } from '@quenk/noni/lib/control/monad/future';
 import { rmerge } from '@quenk/noni/lib/data/record';
 import { match } from '@quenk/noni/lib/control/match';
+
 import { Pending } from './context/file/pending';
 import { FileContext } from './context/file';
 import { Global } from './context/global';
@@ -56,6 +59,13 @@ const interpProperty = (ctx: FileContext, p: ast.Property): Future<Output> =>
 
 const flatPath = (path: ast.Identifier[]): string =>
     path.map(p => p.value).join('.');
+
+/**
+ * interpValues
+ */
+export const interpValues = (ctx: FileContext, vals: ast.Value[])
+    : Future<Type[]> =>
+    sequential(vals.map(v => interpValue(ctx, v)));
 
 /**
  * interpValue node into a Type.
@@ -115,7 +125,10 @@ const dict2TS = (ctx: FileContext) => (d: ast.Dict): Future<Output> =>
         .properties
         .reduce((p: Future<Output>, c) => p.chain(o =>
             interpValue(ctx, c.value)
-                .map(value => set(c.key.value, value, o))), pure({}));
+                .map(value => set(
+                  c.key.map(i => i.value).join('.'),
+                  value, 
+                  o))), pure({}));
 
 const interpLiteral = (n: ast.Literal): Future<Type> =>
     pure(n.value);

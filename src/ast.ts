@@ -218,7 +218,7 @@ export class Pair {
     type = 'pair';
 
     constructor(
-        public key: Identifier,
+        public key: Identifier[],
         public value: Value,
         public location: Location) { }
 

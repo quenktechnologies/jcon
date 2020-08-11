@@ -159,11 +159,11 @@ export declare class Dict {
  * Pair node.
  */
 export declare class Pair {
-    key: Identifier;
+    key: Identifier[];
     value: Value;
     location: Location;
     type: string;
-    constructor(key: Identifier, value: Value, location: Location);
+    constructor(key: Identifier[], value: Value, location: Location);
 }
 /**
  * ArrowFunction node.

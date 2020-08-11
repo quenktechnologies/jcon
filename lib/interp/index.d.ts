@@ -22,6 +22,10 @@ export declare const interpFile: (ctx: FileContext, f: ast.File) => Future<Outpu
  */
 export declare const interpDirective: (ctx: FileContext, d: ast.Directive) => Future<Output>;
 /**
+ * interpValues
+ */
+export declare const interpValues: (ctx: FileContext, vals: ast.Value[]) => Future<Type[]>;
+/**
  * interpValue node into a Type.
  */
 export declare const interpValue: (ctx: FileContext, val: ast.Value) => Future<Type>;
