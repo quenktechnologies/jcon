@@ -229,7 +229,7 @@ dict
           ;
 
 pair
-          : identifier '=' value
+          : path '=' value
             {$$ = new yy.ast.Pair($1, $3, @$);}
           ;
 
