@@ -1,5 +1,6 @@
 import * as must from 'must';
 import * as fs from 'fs';
+
 import { tree, parse } from '../src';
 
 var tests = null;
@@ -148,7 +149,24 @@ tests = {
 
   }
 
-  `
+  `,
+    'should allow string literal paths': `
+
+    "app" = {
+
+      session."key".value = "a key"
+
+      "session"."key"."name" = "key"
+
+      "session"."key".enabled = true
+
+      "session".options = {
+
+         encryption = true
+
+       }
+      
+    } `
 
 };
 

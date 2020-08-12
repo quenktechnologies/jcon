@@ -113,10 +113,16 @@ property
 
 path
           : identifier
-            {$$ = [$1];}
+            {$$ = [$1];           }
+
+          | string_literal
+            {$$ = [$1];           }
 
           | path '.' identifier
-            {$$ = $1.concat($3); }
+            {$$ = $1.concat($3);  }
+
+          | string_literal '.' identifier
+            {$$ = $1.contact($3); }
           ;
 
 value

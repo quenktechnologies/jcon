@@ -45,7 +45,7 @@ export interface Location {
 /**
  * File node.
  *
- * Represents the entire contents of the source text.
+ * Represents the entire parsed source text.
  * The source text of a jcon file is meant to be compiled to 
  * a single ES object.
  */
@@ -92,6 +92,13 @@ export class Comment {
 }
 
 /**
+ * PathName of a top level or dict property.
+ * 
+ * These can be chained together for dot notation.
+ */
+export type PathName = Identifier | StringLiteral;
+
+/**
  * Property node.
  *
  * A property in a jcon file is simply a top level key value pair.
@@ -101,7 +108,7 @@ export class Property {
     type = 'property'
 
     constructor(
-        public path: Identifier[],
+        public path: PathName[],
         public value: Value,
         public location: Location) { }
 
@@ -109,7 +116,7 @@ export class Property {
 
 /**
  * Value are those nodes that can legally appear on the right-hand side of a
- * Property pair.
+ * property pair.
  */
 export type Value
     = Member
@@ -118,7 +125,6 @@ export type Value
     | List
     | Dict
     | Literal
-    | ArrowFunction
     ;
 
 /**
@@ -206,36 +212,7 @@ export class Dict {
 
     type = 'dict';
 
-    constructor(public properties: Pair[], public location: Location) { }
-
-}
-
-/**
- * Pair node.
- */
-export class Pair {
-
-    type = 'pair';
-
-    constructor(
-        public key: Identifier[],
-        public value: Value,
-        public location: Location) { }
-
-}
-
-/**
- * ArrowFunction node.
- *
- * (Not used, needed by the tdc tool).
- */
-export class ArrowFunction {
-
-    type = 'arrow-function';
-
-    constructor(
-        public body: string,
-        public location: Location) { }
+    constructor(public properties: Property[], public location: Location) { }
 
 }
 
