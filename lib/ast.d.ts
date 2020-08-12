@@ -156,20 +156,10 @@ export declare class List {
  * Dict node.
  */
 export declare class Dict {
-    properties: Pair[];
+    properties: Property[];
     location: Location;
     type: string;
-    constructor(properties: Pair[], location: Location);
-}
-/**
- * Pair node.
- */
-export declare class Pair {
-    key: PathName[];
-    value: Value;
-    location: Location;
-    type: string;
-    constructor(key: PathName[], value: Value, location: Location);
+    constructor(properties: Property[], location: Location);
 }
 /**
  * Literal value types.

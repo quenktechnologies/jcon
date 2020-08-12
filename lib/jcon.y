@@ -8,7 +8,8 @@ DecimalIntegerLiteral [-]?([0]|({NonZeroDigit}{DecimalDigits}*))
 
 NumberLiteral ([-]?{DecimalIntegerLiteral}\.{DecimalDigits}*)|(\.{DecimalDigits})|({DecimalIntegerLiteral})
 
-Identifier [a-zA-Z$_][a-zA-Z$_0-9-]*
+Identifier [a-zA-Z$_][a-zA-Z$_0-9]*
+UriPath [a-zA-Z$_][a-zA-Z$_0-9-]*
 LineContinuation \\(\r\n|\r|\n)
 HexDigit [0-9a-fA-F]
 UnicodeEscapeSequence [u]{HexDigit}{4}
@@ -31,6 +32,7 @@ Characters [^\n]*
 'false'                                                  return 'FALSE';
 {Org}                                                    return 'ORG';
 {Identifier}                                             return 'IDENTIFIER';
+{UriPath}                                                return 'URIPATH';
 {StringLiteral}                                          return 'STRING_LITERAL';
 {NumberLiteral}                                          return 'NUMBER_LITERAL';
 <*>'--'{Characters}                                      return 'COMMENT';
@@ -121,8 +123,8 @@ path
           | path '.' identifier
             {$$ = $1.concat($3);  }
 
-          | string_literal '.' identifier
-            {$$ = $1.contact($3); }
+          | path '.' string_literal
+            {$$ = $1.concat($3); }
           ;
 
 value
@@ -162,6 +164,9 @@ uri
           | IDENTIFIER
             {$$ = $1;}
 
+          | URIPATH
+            {$$ = $1;}
+
           | uri '/' '.' 
             {$$ = $1+$2+$3;}
           
@@ -172,6 +177,9 @@ uri
             {$$ = $1+$2+$3;}
 
           | uri '/' IDENTIFIER
+            {$$ = $1+$2+$3;}
+
+          | uri '/' URIPATH
             {$$ = $1+$2+$3;}
           ;
 
@@ -212,7 +220,6 @@ filter
             {$$ = new yy.ast.Filter($1, @$); }
           ;
 
-
 list      
           : '[' ']'
             {$$ = new yy.ast.List([], @$); }
@@ -230,13 +237,8 @@ dict
           : '{' '}'
             {$$ = new yy.ast.Dict([], @$); }
 
-          | '{' pair+ '}'
+          | '{' property+ '}'
             {$$ = new yy.ast.Dict($2, @$); }
-          ;
-
-pair
-          : path '=' value
-            {$$ = new yy.ast.Pair($1, $3, @$);}
           ;
 
 string_literal

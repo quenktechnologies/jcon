@@ -212,21 +212,7 @@ export class Dict {
 
     type = 'dict';
 
-    constructor(public properties: Pair[], public location: Location) { }
-
-}
-
-/**
- * Pair node.
- */
-export class Pair {
-
-    type = 'pair';
-
-    constructor(
-        public key: PathName[],
-        public value: Value,
-        public location: Location) { }
+    constructor(public properties: Property[], public location: Location) { }
 
 }
 

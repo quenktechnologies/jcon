@@ -126,7 +126,7 @@ const dict2TS = (ctx: FileContext) => (d: ast.Dict): Future<Output> =>
         .reduce((p: Future<Output>, c) => p.chain(o =>
             interpValue(ctx, c.value)
                 .map(value => set(
-                  c.key.map(i => i.value).join('.'),
+                  c.path.map(i => i.value).join('.'),
                   value, 
                   o))), pure({}));
 
