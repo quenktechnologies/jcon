@@ -1,4 +1,4 @@
-import { Node } from './ast';
+import { File } from './ast';
 
 /**
  * Parser 
@@ -8,7 +8,7 @@ export interface Parser {
     /**
      * parse a source text into an AST.
      */
-    parse<N extends Node>(src: string): N;
+    parse(src: string): File;
 
     /**
      * yy contains identifiers used during parsing.

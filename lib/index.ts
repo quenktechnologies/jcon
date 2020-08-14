@@ -38,7 +38,7 @@ export const tree: Nodes<Node> = {
 /**
  * parse source text into an abstract syntax tree.
  */
-export const parse = <N extends Node>(str: string, ast: Nodes<N>): Result<N> => {
+export const parse = (str: string, ast: Nodes<Node>): Result<File> => {
 
     parser.parser.yy = { ast };
 
