@@ -1,9 +1,9 @@
 /**
  * Nodes map.
  */
-export interface Nodes<N extends Node> {
+export interface Nodes {
 
-    [key: string]: Constructor<N>;
+    [key: string]: Constructor<Node>;
 
 }
 
@@ -122,6 +122,7 @@ export type Value
     = Member
     | Var
     | EnvVar
+    | Function
     | List
     | Dict
     | Literal
@@ -190,6 +191,21 @@ export class Filter {
 
     constructor(
         public name: Identifier,
+        public location: Location) { }
+
+}
+
+/**
+ * Function node.
+ *
+ * (Not used, needed by the tdc tool).
+ */
+export class Function {
+
+    type = 'arrow-function';
+
+    constructor(
+        public body: string,
         public location: Location) { }
 
 }

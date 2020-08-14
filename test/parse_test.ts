@@ -1,7 +1,7 @@
 import * as must from 'must';
 import * as fs from 'fs';
 
-import { tree, parse } from '../src';
+import {  parse } from '../src';
 
 var tests = null;
 
@@ -23,7 +23,7 @@ function makeTest(test, index) {
 
     if (process.env.GENERATE) {
 
-        return parse(test, tree)
+        return parse(test )
             .map(json)
             .map(txt => fs.writeFileSync(`./test/expectations/${file}.json`, txt))
             .orRight((e: Error) => { throw e; });
@@ -32,7 +32,7 @@ function makeTest(test, index) {
 
     if (!test.skip) {
 
-        parse(test, tree)
+        parse(test )
             .map(json)
             .map(txt =>
                 compare(txt,

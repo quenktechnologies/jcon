@@ -1,10 +1,12 @@
 import * as ast from '../../ast';
+
 import {
     Future,
     raise,
     pure
 } from '@quenk/noni/lib/control/monad/future';
-import {parseDefault} from '../../';
+
+import { parse } from '../../';
 
 /**
  * Parser turns a text string into a File node.
@@ -15,7 +17,7 @@ export type Parser = (src: string) => Future<ast.File>;
  *  parser implementation.
  */
 export const parser = (src: string): Future<ast.File> =>
-    parseDefault(src)
+    parse(src)
         .map(checkParsed)
         .orRight(raise)
         .takeRight();
