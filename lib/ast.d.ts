@@ -1,8 +1,8 @@
 /**
  * Nodes map.
  */
-export interface Nodes<N extends Node> {
-    [key: string]: Constructor<N>;
+export interface Nodes {
+    [key: string]: Constructor<Node>;
 }
 /**
  * Constructor function for a generic node.
@@ -91,7 +91,7 @@ export declare class Property {
  * Value are those nodes that can legally appear on the right-hand side of a
  * property pair.
  */
-export declare type Value = Member | Var | EnvVar | List | Dict | Literal;
+export declare type Value = Member | Var | EnvVar | Function | List | Dict | Literal;
 /**
  * Member node.
  *
@@ -142,6 +142,17 @@ export declare class Filter {
     location: Location;
     type: string;
     constructor(name: Identifier, location: Location);
+}
+/**
+ * Function node.
+ *
+ * (Not used, needed by the tdc tool).
+ */
+export declare class Function {
+    body: string;
+    location: Location;
+    type: string;
+    constructor(body: string, location: Location);
 }
 /**
  * List node.

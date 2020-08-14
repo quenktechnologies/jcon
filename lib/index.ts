@@ -2,7 +2,6 @@
 import { Either, left, right } from '@quenk/noni/lib/data/either';
 import {
     Nodes,
-    Node,
     File,
     Include,
     Comment,
@@ -11,6 +10,7 @@ import {
     Var,
     EnvVar,
     Filter,
+    Function,
     List,
     Dict,
     StringLiteral,
@@ -24,23 +24,19 @@ import parser = require('./parser');
 /**
  * Result of attempting to parse a source text.
  */
-export type Result<N extends Node> = Either<Error, N>;
+export type Result = Either<Error, File>;
 
-
-/**
- * tree is a map of reference nodes that can be used during parsing.
- */
-export const tree: Nodes<Node> = {
-    File, Include, Comment, Property, Member, Var, EnvVar, Filter, List, Dict, 
-    StringLiteral, NumberLiteral, BooleanLiteral, Module, Identifier
+ const tree: Nodes = {
+    File, Include, Comment, Property, Member, Var, EnvVar, Filter, Function,
+    List, Dict, StringLiteral, NumberLiteral, BooleanLiteral, Module, Identifier
 }
 
 /**
  * parse source text into an abstract syntax tree.
  */
-export const parse = (str: string, ast: Nodes<Node>): Result<File> => {
+export const parse = (str: string): Result => {
 
-    parser.parser.yy = { ast };
+    parser.parser.yy = { ast: tree };
 
     try {
 
@@ -53,11 +49,3 @@ export const parse = (str: string, ast: Nodes<Node>): Result<File> => {
     }
 
 }
-
-/**
- * parseDefault 
- *
- * Uses the builtin AST.
- */
-export const parseDefault = (src: string): Result<Node> =>
-    parse(src, tree)
