@@ -1,9 +1,7 @@
 
 export const tests = {
 
-    'should recognize booleans':
-        `testTrue = true
-   testFalse = false`,
+    'should recognize booleans': 'testTrue = true testFalse = false',
 
     'should recognize lists': 'list = [1,"two", [3], {value=4}]',
 
@@ -13,19 +11,25 @@ export const tests = {
 
     'should recognize module members': 'module.as.path = module/as/path#member',
 
-    'should recognize org module members': 'either = @quenk/noni/lib/data/either#Either',
+    'should recognize org module members':
+        'either = @quenk/noni/lib/data/either#Either',
 
-    'should recognize dotted paths': 'module.as.relative.path = ./module/with/relative/../path#member',
+    'should recognize dotted paths':
+        'module.as.relative.path = ./module/with/relative/../path#member',
 
-    'should recognize lists of members': 'array.of.modules = [one#default, ./path/to#member(), other/one#one]',
+    'should recognize lists of members':
+        'array.of.modules = [one#default, ./path/to#member(), other/one#one]',
 
-    'should recognize partially applied modules': 'call = module#func(1, 2, [3.3])',
+    'should recognize partially applied modules':
+        'call = module#func(1, 2, [3.3])',
 
     'should recognize empty partially applied modules': 'call = module#func()',
 
-    'should recognize partially applied members': 'call = path/to/member#func(1, 2, [3])',
+    'should recognize partially applied members':
+        'call = path/to/member#func(1, 2, [3])',
 
-    'should recognize empty partially applied members': 'call = path/to/member#func()',
+    'should recognize empty partially applied members':
+        'call = path/to/member#func()',
 
     'should recognize variables': 'env = $(value)',
 
@@ -35,10 +39,11 @@ export const tests = {
 
     'should recognize includes': 'include "some path"',
 
-    'should allow complex dicts':
-        `complex.dict = {
-   
-    main = {
+    'should allow complex dicts': `
+
+      complex.dict = {
+      
+      main = {
        connector = path/to/connector#connector
        options = {
          
@@ -50,10 +55,10 @@ export const tests = {
 
     }
    
-}`,
+    }`,
 
-    'should all together now':
-        `
+    'should all together now': `
+        
   include "path/to/file/a"
   include "path/to/file/b"
 
@@ -101,9 +106,7 @@ export const tests = {
 
     store.options.uri = \${MONGO_URL}
 
-  }
-
-  `,
+  }`,
     'should allow string literal paths': `
 
     "app" = {
@@ -124,18 +127,18 @@ export const tests = {
 
     'should merge paths': `
 
-   path.to.a = "this"
+         path.to.a = "this"
 
-   path.to.b = "that"
+         path.to.b = "that"
 
-   path.to = {
+         path.to = {
 
-    c = "c"
+           c = "c"
 
-    d = "d"
+           d = "d"
 
-   }
+         }
 
-   path.to.e = "e"`
+     path.to.e = "e"`
 
 }
