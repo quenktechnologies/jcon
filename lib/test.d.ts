@@ -22,4 +22,5 @@ export declare const tests: {
     'should allow objects with paths': string;
     'should allow string literal paths': string;
     'should merge paths': string;
+    'should import nested imports': string;
 };

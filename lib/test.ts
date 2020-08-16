@@ -139,6 +139,19 @@ export const tests = {
 
          }
 
-     path.to.e = "e"`
+     path.to.e = "e"`,
+
+    'should import nested imports': `
+              connections = {
+
+                main = {
+
+                  connector = @quenk/tendril-connection-mongodb#connector
+
+                  options = [@quenk/mongo#url]
+
+                }
+
+              }`
 
 }
