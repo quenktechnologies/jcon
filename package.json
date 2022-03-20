@@ -1,6 +1,6 @@
 {
   "name": "@quenk/jcon",
-  "version": "0.14.8",
+  "version": "0.14.9",
   "description": "JavaScript Configuration Object Notation",
   "main": "lib/index.js",
   "files": [
