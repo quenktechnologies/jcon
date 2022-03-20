@@ -23,4 +23,5 @@ export declare const tests: {
     'should allow string literal paths': string;
     'should merge paths': string;
     'should import nested imports': string;
+    'should allow modules members in calls with dict args': string;
 };

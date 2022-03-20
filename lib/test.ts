@@ -152,6 +152,20 @@ export const tests = {
 
                 }
 
-              }`
+              }`,
+
+  'should allow modules members in calls with dict args':`
+
+    app.filters = [ 
+
+      @devcarib/server/lib/filters/query#compile({
+
+        policies = @mia/filter-policies#policiesEnabled
+
+        fields = @mia/fields#fields
+
+      })
+
+    ]`
 
 }
