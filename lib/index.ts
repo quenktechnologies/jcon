@@ -26,7 +26,7 @@ import parser = require('./parser');
  */
 export type Result = Either<Error, File>;
 
- const tree: Nodes = {
+const tree: Nodes = {
     File, Include, Comment, Property, Member, Var, EnvVar, Filter, Function,
     List, Dict, StringLiteral, NumberLiteral, BooleanLiteral, Module, Identifier
 }
@@ -44,7 +44,7 @@ export const parse = (str: string): Result => {
 
     } catch (e) {
 
-        return left(e);
+        return <Result>left(e);
 
     }
 

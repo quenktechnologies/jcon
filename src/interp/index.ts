@@ -100,7 +100,8 @@ const interpMember = (ctx: FileContext) => (m: ast.Member): Future<Type> => {
         } catch (e) {
 
             return raise(new Error(`Error while invoking module ` +
-                `"${m.module.module}#${m.member.value}": \n` + e.stack));
+                `"${m.module.module}#${m.member.value}": \n` + 
+              (<Error>e).stack));
 
         }
 
